@@ -1,0 +1,83 @@
+div.nav-container {
+  width: 100%;
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+nav {
+  width: 90%;
+  margin: 0 auto;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo {
+  width: 40px;
+  height: 40px;
+}
+
+.nav-main-menu {
+  margin-left: 60px;
+  justify-self: flex-start;
+  background-color: #f3f4f7;
+  border-radius: 10px;
+}
+
+.nav-main-menu-list-item {
+}
+
+.nav-secondary-menu {
+  margin-left: auto;
+}
+
+/* related classes (main-menu && secondary-menu) */
+
+.nav-main-menu-list,
+.nav-secondary-menu-list {
+  list-style: none;
+  display: flex;
+}
+
+.nav-main-menu-list-item,
+.nav-secondary-menu-list-item {
+  padding: 7px 20px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.nav-main-menu-list-item.active {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  color: rgba(0, 0, 0, 1);
+}
+
+.nav-secondary-menu-list-item#loginBtn {
+  color: rgba(0, 0, 0, 0.77);
+}
+
+.nav-secondary-menu-list-item#registerBtn {
+  color: #fff;
+  background-color: #242526;
+  border-radius: 10px;
+  transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+.nav-secondary-menu-list-item#registerBtn:hover {
+  background-color: #444546;
+  transform: scale(1.02);
+}
+
+.nav-secondary-menu-list-item#registerBtn:active {
+  transform: scale(0.99);
+}

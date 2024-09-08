@@ -1,0 +1,48 @@
+.page_login {
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page_login .form {
+  width: 500px;
+  padding: 20px 30px;
+  border: 2px solid #f0f0f0;
+  border-radius: 6px;
+  color: rgba(0, 0, 0, 0.74);
+}
+
+.form h2.header {
+  margin: 10px 0;
+}
+
+.form .subheader {
+  font-weight: 500;
+}
+
+.form .subheader a {
+  color: #3bb59a !important;
+  font-weight: 600;
+}
+
+.form .ant-btn {
+  float: right;
+  font-weight: 500;
+  margin-top: 20px;
+  width: 100px;
+  height: 40px;
+  font-size: 16px;
+  transition: all 0.02s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+}
+
+@media screen and (max-width: 467px) {
+  .page_login {
+    align-items: baseline;
+    overflow: hidden;
+  }
+  .page_login .form {
+    width: 100%;
+    border: none;
+  }
+}

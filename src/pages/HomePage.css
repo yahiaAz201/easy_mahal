@@ -1,0 +1,26 @@
+.page_home {
+  padding: 10px;
+}
+
+.page_home .control {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.page_home .control button {
+  margin-left: 5px;
+  font-weight: 600;
+}
+
+.page_home .control-newclients-divider {
+  margin: 10px 0;
+}
+
+.ant-table-row {
+  cursor: pointer;
+  transition: font-weight 0.1s ease-in-out;
+}
+
+/* .ant-table-row:hover {
+  font-weight: 600;
+} */
