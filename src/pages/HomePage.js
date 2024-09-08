@@ -10,8 +10,17 @@ import {
   Tag,
   Badge,
   Dropdown,
+  Flex,
 } from "antd";
-import { Download, Printer, BadgePlus, EllipsisVertical } from "lucide-react";
+import {
+  Download,
+  Printer,
+  BadgePlus,
+  EllipsisVertical,
+  BadgeX,
+  Cog,
+  DiamondPlus,
+} from "lucide-react";
 
 const pageHeight =
   window.document.documentElement.scrollHeight - (99 + 53 + 32);
@@ -406,6 +415,7 @@ const newClientsColumns = ({ selectedRowKeys }) => [
     ),
     render: (client) => `${client.fname} ${client.lname}`,
   },
+  Table.EXPAND_COLUMN,
   {
     title: "Phone N°",
     dataIndex: "phone",
@@ -430,7 +440,50 @@ const newClientsColumns = ({ selectedRowKeys }) => [
     dataIndex: "createdAt",
     render: (createdAt) => new Date(createdAt).toLocaleString(),
   },
-  Table.EXPAND_COLUMN,
+  {
+    align: "right",
+    render: () => (
+      <Dropdown
+        menu={{
+          items: [
+            {
+              key: "edit",
+              label: (
+                <Flex align="center">
+                  <Cog size={15} style={{ marginRight: 5 }} />
+                  <span>Edit</span>
+                </Flex>
+              ),
+            },
+            {
+              key: "remove",
+              label: (
+                <Flex align="center">
+                  <BadgeX size={15} style={{ marginRight: 5 }} />
+                  <span>Remove</span>
+                </Flex>
+              ),
+            },
+            {
+              type: "divider",
+            },
+            {
+              key: "addProduct",
+              label: (
+                <Flex align="center">
+                  <DiamondPlus size={15} style={{ marginRight: 5 }} />
+                  <span>Purchase</span>
+                </Flex>
+              ),
+            },
+          ],
+        }}
+        trigger={["click"]}
+      >
+        <EllipsisVertical size={15} />
+      </Dropdown>
+    ),
+  },
 ];
 
 export default function HomePage() {
@@ -936,18 +989,33 @@ export default function HomePage() {
                 items: [
                   {
                     key: "edit",
-                    label: "Edit",
+                    label: (
+                      <Flex align="center">
+                        <Cog size={15} style={{ marginRight: 5 }} />
+                        <span>Edit</span>
+                      </Flex>
+                    ),
                   },
                   {
                     key: "remove",
-                    label: "Remove",
+                    label: (
+                      <Flex align="center">
+                        <BadgeX size={15} style={{ marginRight: 5 }} />
+                        <span>Remove</span>
+                      </Flex>
+                    ),
                   },
                   {
                     type: "divider",
                   },
                   {
                     key: "print",
-                    label: "Print",
+                    label: (
+                      <Flex align="center">
+                        <Printer size={15} style={{ marginRight: 5 }} />
+                        <span>Print</span>
+                      </Flex>
+                    ),
                   },
                 ],
               }}
