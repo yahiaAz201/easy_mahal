@@ -1,12 +1,11 @@
-.page_login {
+.page_signup {
   background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.page_login .form {
-  width: 500px;
+.page_signup .form {
   padding: 20px 30px;
   border: 2px solid #f0f0f0;
   border-radius: 6px;
@@ -37,11 +36,11 @@
 }
 
 @media screen and (max-width: 467px) {
-  .page_login {
+  .page_signup {
     align-items: baseline;
     overflow: hidden;
   }
-  .page_login .form {
+  .page_signup .form {
     width: 100%;
     border: none;
   }

@@ -11,6 +11,18 @@
   user-select: none;
 }
 
+.text_input_container.small label {
+  font-size: 14px;
+}
+
+.text_input_container.middle label {
+  font-size: 16px;
+}
+
+.text_input_container.large label {
+  font-size: 18px;
+}
+
 .text_input_container label.label-error {
   color: #ff0000;
 }
@@ -25,11 +37,26 @@
   align-items: center;
 }
 
+.text_input_container.small div {
+  height: 30px;
+  font-size: 13.3333px;
+}
+
+.text_input_container.middle div {
+  height: 34px;
+  font-size: 13.3333px;
+}
+
+.text_input_container.large div {
+  height: 45px;
+  font-size: 13.3333px;
+}
+
 .text_input_container div input {
   background: none;
   border: none;
   color: rgba(0, 0, 0, 0.74);
-  font-size: 16px;
+  font-size: inherit;
   font-weight: 500;
   outline: none;
   height: 100%;

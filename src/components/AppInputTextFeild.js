@@ -11,13 +11,15 @@ export default function AppInputTextField({
   touched,
   error,
   rightIcon,
+  size = "middle",
+  style,
   ...rest
 }) {
   const calc_status = status ? status : "primary";
 
   return (
-    <div>
-      <div className="text_input_container" style={{ width: width }}>
+    <div style={style}>
+      <div className={`text_input_container ${size}`} style={{ width: width }}>
         <label
           className={`label label-status-${calc_status} ${
             touched && error ? "label-error" : ""

@@ -2,18 +2,18 @@ import "./HomePage.css";
 import React, { useState, useRef, useEffect } from "react";
 
 import {
-  Table,
+  AutoComplete,
   Divider,
+  Table,
   Button,
-  Tooltip,
   Modal,
   Tag,
   Badge,
   Dropdown,
   Flex,
+  message,
 } from "antd";
 import {
-  Download,
   Printer,
   BadgePlus,
   EllipsisVertical,
@@ -21,18 +21,13 @@ import {
   Cog,
   DiamondPlus,
 } from "lucide-react";
+import * as Yup from "yup";
+
+import AppInputTextFeild from "../components/AppInputTextFeild";
+import { Formik } from "formik";
 
 const pageHeight =
   window.document.documentElement.scrollHeight - (99 + 53 + 32);
-
-const USER = {
-  fname: "jhon",
-  lname: "doe",
-  ccp: {
-    number: "0021006220",
-    key: "21",
-  },
-};
 
 const NEW_CLIENTS = [
   {
@@ -47,10 +42,11 @@ const NEW_CLIENTS = [
     phone: "0776543210",
     idn: "135792468013579",
     createdAt: "2024-09-06T19:49:09.459Z",
+    payDay: "9",
     orders: [
       {
+        _id: "1",
         name: "Iphone 15 Mini",
-        payDay: "9",
         amount: 600_000,
         nombre: 7,
         paymentStartDate: "2024-09-06T19:49:09.459Z",
@@ -58,10 +54,19 @@ const NEW_CLIENTS = [
         isPaid: true,
       },
       {
+        _id: "2",
         name: "Laptop HP",
-        payDay: "15",
         amount: 200_000,
         nombre: 12,
+        paymentStartDate: "2024-09-06T19:49:09.459Z",
+        paymentEndDate: "2025-02-06T19:49:09.459Z",
+        isPaid: false,
+      },
+      {
+        _id: "3",
+        name: "Samsung Fridge",
+        amount: 10_000,
+        nombre: 15,
         paymentStartDate: "2024-09-06T19:49:09.459Z",
         paymentEndDate: "2025-02-06T19:49:09.459Z",
         isPaid: false,
@@ -80,10 +85,11 @@ const NEW_CLIENTS = [
     phone: "0698765432",
     idn: "246813579024680",
     createdAt: "2024-09-06T19:50:12.459Z",
+    payDay: "10",
     orders: [
       {
+        _id: "1",
         name: "Smartphone Samsung",
-        payDay: "10",
         amount: 90_000,
         nombre: 18,
         paymentStartDate: "2024-09-06T19:50:12.459Z",
@@ -104,10 +110,11 @@ const NEW_CLIENTS = [
     phone: "0754321987",
     idn: "159753468012345",
     createdAt: "2024-09-06T19:52:34.459Z",
+    payDay: "5",
     orders: [
       {
+        _id: "1",
         name: "Tablet Lenovo",
-        payDay: "5",
         amount: 150_000,
         nombre: 30,
         paymentStartDate: "2024-09-06T19:52:34.459Z",
@@ -128,10 +135,11 @@ const NEW_CLIENTS = [
     phone: "0785432190",
     idn: "123456789012345",
     createdAt: "2024-09-06T19:54:10.459Z",
+    payDay: "20",
     orders: [
       {
+        _id: "1",
         name: "Gaming PC",
-        payDay: "20",
         amount: 300_000,
         nombre: 20,
         paymentStartDate: "2024-09-06T19:54:10.459Z",
@@ -152,10 +160,11 @@ const NEW_CLIENTS = [
     phone: "0665432198",
     idn: "135468024135791",
     createdAt: "2024-09-06T19:55:20.459Z",
+    payDay: "25",
     orders: [
       {
+        _id: "1",
         name: "Washing Machine LG",
-        payDay: "25",
         amount: 180_000,
         nombre: 25,
         paymentStartDate: "2024-09-06T19:55:20.459Z",
@@ -176,10 +185,11 @@ const NEW_CLIENTS = [
     phone: "0776543212",
     idn: "987654321012345",
     createdAt: "2024-09-06T19:57:34.459Z",
+    payDay: "18",
     orders: [
       {
+        _id: "1",
         name: "Fridge Beko",
-        payDay: "18",
         amount: 220_000,
         nombre: 12,
         paymentStartDate: "2024-09-06T19:57:34.459Z",
@@ -200,10 +210,11 @@ const NEW_CLIENTS = [
     phone: "0654321987",
     idn: "123456789987654",
     createdAt: "2024-09-06T19:58:10.459Z",
+    payDay: "8",
     orders: [
       {
+        _id: "1",
         name: "Microwave Panasonic",
-        payDay: "8",
         amount: 95_000,
         nombre: 40,
         paymentStartDate: "2024-09-06T19:58:10.459Z",
@@ -224,10 +235,11 @@ const NEW_CLIENTS = [
     phone: "0786543219",
     idn: "159753246801357",
     createdAt: "2024-09-06T19:59:12.459Z",
+    payDay: "12",
     orders: [
       {
+        _id: "1",
         name: "Camera Canon",
-        payDay: "12",
         amount: 175_000,
         nombre: 35,
         paymentStartDate: "2024-09-06T19:59:12.459Z",
@@ -248,10 +260,11 @@ const NEW_CLIENTS = [
     phone: "0676543218",
     idn: "246813579013579",
     createdAt: "2024-09-06T20:00:15.459Z",
+    payDay: "22",
     orders: [
       {
+        _id: "1",
         name: "Smartwatch Apple",
-        payDay: "22",
         amount: 150_000,
         nombre: 22,
         paymentStartDate: "2024-09-06T20:00:15.459Z",
@@ -272,10 +285,11 @@ const NEW_CLIENTS = [
     phone: "0775432109",
     idn: "135792468013579",
     createdAt: "2024-09-06T20:01:18.459Z",
+    payDay: "14",
     orders: [
       {
+        _id: "1",
         name: "Gaming Console PS5",
-        payDay: "14",
         amount: 120_000,
         nombre: 24,
         paymentStartDate: "2024-09-06T20:01:18.459Z",
@@ -296,10 +310,11 @@ const NEW_CLIENTS = [
     phone: "0674321098",
     idn: "987654321012345",
     createdAt: "2024-09-06T20:02:22.459Z",
+    payDay: "6",
     orders: [
       {
+        _id: "1",
         name: "Washing Machine Samsung",
-        payDay: "6",
         amount: 130_000,
         nombre: 36,
         paymentStartDate: "2024-09-06T20:02:22.459Z",
@@ -320,10 +335,11 @@ const NEW_CLIENTS = [
     phone: "0783210987",
     idn: "123456789012345",
     createdAt: "2024-09-06T20:03:25.459Z",
+    payDay: "28",
     orders: [
       {
+        _id: "1",
         name: "TV Sony",
-        payDay: "28",
         amount: 190_000,
         nombre: 45,
         paymentStartDate: "2024-09-06T20:03:25.459Z",
@@ -344,10 +360,11 @@ const NEW_CLIENTS = [
     phone: "0665432109",
     idn: "135468024135791",
     createdAt: "2024-09-06T20:04:28.459Z",
+    payDay: "18",
     orders: [
       {
+        _id: "1",
         name: "Fridge Samsung",
-        payDay: "18",
         amount: 220_000,
         nombre: 20,
         paymentStartDate: "2024-09-06T20:04:28.459Z",
@@ -368,10 +385,11 @@ const NEW_CLIENTS = [
     phone: "0653210987",
     idn: "159753468013579",
     createdAt: "2024-09-06T20:05:31.459Z",
+    payDay: "17",
     orders: [
       {
+        _id: "1",
         name: "Dishwasher Bosch",
-        payDay: "17",
         amount: 145_000,
         nombre: 22,
         paymentStartDate: "2024-09-06T20:05:31.459Z",
@@ -392,10 +410,11 @@ const NEW_CLIENTS = [
     phone: "0776543210",
     idn: "987654321098765",
     createdAt: "2024-09-06T20:06:34.459Z",
+    payDay: "8",
     orders: [
       {
+        _id: "1",
         name: "Microwave LG",
-        payDay: "8",
         amount: 95_000,
         nombre: 40,
         paymentStartDate: "2024-09-06T20:06:34.459Z",
@@ -406,91 +425,32 @@ const NEW_CLIENTS = [
   },
 ];
 
-const newClientsColumns = ({ selectedRowKeys }) => [
-  {
-    title: () => (
-      <div>
-        Full Name <Badge count={selectedRowKeys.length} />
-      </div>
-    ),
-    render: (client) => `${client.fname} ${client.lname}`,
-  },
-  Table.EXPAND_COLUMN,
-  {
-    title: "Phone N°",
-    dataIndex: "phone",
-  },
-  {
-    title: "CCP",
-    dataIndex: "ccp",
-    render: (ccp) => (
-      <>
-        <Tag color="green">{ccp.number}</Tag>
-        <Tag color="red">{ccp.key}</Tag>
-      </>
-    ),
-  },
-  {
-    title: "Orders",
-    dataIndex: "orders",
-    render: (orders) => orders.length,
-  },
-  {
-    title: "Created At",
-    dataIndex: "createdAt",
-    render: (createdAt) => new Date(createdAt).toLocaleString(),
-  },
-  {
-    align: "right",
-    render: () => (
-      <Dropdown
-        menu={{
-          items: [
-            {
-              key: "edit",
-              label: (
-                <Flex align="center">
-                  <Cog size={15} style={{ marginRight: 5 }} />
-                  <span>Edit</span>
-                </Flex>
-              ),
-            },
-            {
-              key: "remove",
-              label: (
-                <Flex align="center">
-                  <BadgeX size={15} style={{ marginRight: 5 }} />
-                  <span>Remove</span>
-                </Flex>
-              ),
-            },
-            {
-              type: "divider",
-            },
-            {
-              key: "addProduct",
-              label: (
-                <Flex align="center">
-                  <DiamondPlus size={15} style={{ marginRight: 5 }} />
-                  <span>Purchase</span>
-                </Flex>
-              ),
-            },
-          ],
-        }}
-        trigger={["click"]}
-      >
-        <EllipsisVertical size={15} />
-      </Dropdown>
-    ),
-  },
-];
+const validationSchema = Yup.object({
+  fname: Yup.string().required().label("First Name"),
+  lname: Yup.string().required().label("Last Name"),
+  phone: Yup.string()
+    .required()
+    .matches(
+      /^(0(5|6|7)\d{8}|0(2|3|4|9)\d{7})$/,
+      "Phone must be a valid Number"
+    )
+    .label("Phone Number"),
+  idn: Yup.string(),
+  ccp: Yup.object({
+    number: Yup.string(),
+    key: Yup.string(),
+  }),
+  payDay: Yup.mixed()
+    .oneOf(
+      Array.from({ length: 31 }, (v, k) => k + 1),
+      "PayDay must be a number between 1 and 31"
+    )
+    .required()
+    .label("PayDay"),
+});
 
 export default function HomePage() {
-  const [user, setUser] = useState();
-  const [newClients, setNewClients] = useState([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
+  const [clients, setClients] = useState([]);
   const [addNewClientModal, setAddNewClientModal] = useState(false);
 
   const iframeRef = useRef(null);
@@ -498,13 +458,69 @@ export default function HomePage() {
   const handleOnAddNewClientModalOpen = () => setAddNewClientModal(true);
   const handleOnAddNewClientModalCancel = () => setAddNewClientModal(false);
 
-  const onPrint = () => {
-    const clients = newClients.filter((newClient) =>
-      selectedRowKeys.includes(newClient._id)
-    );
+  useEffect(() => {
+    const newClients = NEW_CLIENTS.map((client) => {
+      client["key"] = client["_id"];
+      return client;
+    });
+    setClients(newClients);
+  }, []);
 
-    const data = clients.map(
-      (client) => ` <div class="page">
+  const handleAddNewClient = async () => {
+    console.log("New User");
+  };
+
+  const handleEditClient = (client) => () => {};
+
+  const handleDeleteClient = (_client) => () => {
+    let new_clients = [...clients];
+    const client_index = new_clients.findIndex(
+      (client) => client._id == _client._id
+    );
+    new_clients.splice(client_index, 1);
+    setClients(new_clients);
+    message.success(
+      <span>
+        Client{" "}
+        <span style={{ color: "red", fontWeight: 500 }}>
+          {_client.fname} {_client.lname}
+        </span>{" "}
+        Successfully Deleted
+      </span>
+    );
+  };
+  const handleAddPurchase = (client) => () => {};
+
+  const handleEditOrder = (order, client) => () => {
+    console.log("Edit Order", order._id, client._id);
+  };
+
+  const handleDeleteOrder = (_order, _client) => () => {
+    let new_clients = [...clients];
+    const client_index = new_clients.findIndex(
+      (client) => client._id === _client._id
+    );
+    if (client_index === -1) return;
+    const new_orders = [...new_clients[client_index].orders];
+    const order_index = new_orders.findIndex(
+      (order) => order._id === _order._id
+    );
+    if (order_index === -1) return;
+    new_orders.splice(order_index, 1);
+    new_clients[client_index].orders = new_orders;
+    setClients(new_clients);
+
+    message.success(
+      <span>
+        Order{" "}
+        <span style={{ color: "red", fontWeight: 500 }}>{_order.name}</span>{" "}
+        Successfully Deleted
+      </span>
+    );
+  };
+
+  const handlePrintOrder = (order, client) => () => {
+    const data = `<div class="page">
       <article>
         <img
           class="logo"
@@ -514,8 +530,8 @@ export default function HomePage() {
           <div class="input-filed">
             <label for="fullname">Nom et Prenom</label>
             <input id="fullname" type="text" value="${client.fname} ${
-        client.lname
-      }" />
+      client.lname
+    }" />
           </div>
           <div class="input-filed">
             <label for="nin">n° identifiant national</label>
@@ -529,15 +545,15 @@ export default function HomePage() {
           <div class="input-filed">
             <label for="nccd">n° compte ccp a debiter</label>
             <div class="pin">
-             ${user.ccp.number
+             ${client.ccp.number
                .split("")
                .map((n) => `<input type="text" value="${n}" />`)
                .join("")}
             </div>
             <label for="cle">clé</label>
             <div class="pin">
-              <input type="text" value="${user.ccp.key[0]}" />
-              <input type="text" value="${user.ccp.key[1]}" />
+              <input type="text" value="${client.ccp.key[0]}" />
+              <input type="text" value="${client.ccp.key[1]}" />
             </div>
           </div>
           <div class="input-filed">
@@ -599,7 +615,7 @@ export default function HomePage() {
           </div>
           <div class="input-filed">
             <label for="amount">montant a prelever</label>
-            <input id="amount" type="text" value="1000" />
+            <input id="amount" type="text" value="${order.amount}" />
           </div>
           <div class="input-filed">
             <label for="nmbr">nomber</label>
@@ -758,9 +774,7 @@ export default function HomePage() {
         </section>
       </article>
     </div>
-    `
-    );
-
+    `;
     const printDocument = `
      <html>
   <head>
@@ -927,111 +941,187 @@ export default function HomePage() {
     iframe.contentWindow.focus();
     iframe.contentWindow.print();
   };
-  const onExport = () => {};
 
-  useEffect(() => {
-    const newClients = NEW_CLIENTS.map((client) => {
-      client["key"] = client["_id"];
-      return client;
-    });
-    setNewClients(newClients);
-    setUser(USER);
-  }, []);
+  const newClientsColumns = [
+    {
+      title: "Full Name",
+      render: (client) => `${client.fname} ${client.lname}`,
+    },
+    Table.EXPAND_COLUMN,
+    {
+      title: "Phone N°",
+      dataIndex: "phone",
+    },
+    {
+      title: "CCP",
+      dataIndex: "ccp",
+      render: (ccp) => (
+        <>
+          <Tag color="green">{ccp.number}</Tag>
+          <Tag color="red">{ccp.key}</Tag>
+        </>
+      ),
+    },
+    {
+      title: "Orders",
+      dataIndex: "orders",
+      render: (orders) => orders.length,
+    },
+    {
+      title: "Pay Day",
+      dataIndex: "payDay",
+      render: (payDay) => <Tag color="blue">{payDay}</Tag>,
+    },
+    {
+      title: "Created At",
+      dataIndex: "createdAt",
+      render: (createdAt) => <Tag>{new Date(createdAt).toLocaleString()}</Tag>,
+    },
+    {
+      align: "right",
+      render: (client) => (
+        <Dropdown
+          menu={{
+            items: [
+              {
+                key: "edit",
+                label: (
+                  <Flex align="center" onClick={handleEditClient(client)}>
+                    <Cog size={15} style={{ marginRight: 5 }} />
+                    <span>Edit</span>
+                  </Flex>
+                ),
+              },
+              {
+                key: "remove",
+                label: (
+                  <Flex align="center" onClick={handleDeleteClient(client)}>
+                    <BadgeX size={15} style={{ marginRight: 5 }} />
+                    <span>Remove</span>
+                  </Flex>
+                ),
+              },
+              {
+                type: "divider",
+              },
+              {
+                key: "addPurchase",
+                label: (
+                  <Flex align="center" onClick={handleAddPurchase(client)}>
+                    <DiamondPlus size={15} style={{ marginRight: 5 }} />
+                    <span>Purchase</span>
+                  </Flex>
+                ),
+              },
+            ],
+          }}
+          trigger={["click"]}
+        >
+          <EllipsisVertical size={15} />
+        </Dropdown>
+      ),
+    },
+  ];
 
-  const expandedRowRender = ({ orders }) => {
-    const columns = [
-      {
-        title: "Name",
-        dataIndex: "name",
-      },
-      {
-        title: "Pay Day",
-        dataIndex: "payDay",
-        render: (payDay) => <Tag color="blue">{payDay}</Tag>,
-      },
-      {
-        title: "Amount",
-        dataIndex: "amount",
-        render: (amount) => (
-          <span style={{ fontWeight: 600 }}>{amount / 100} DZD</span>
-        ),
-      },
-      {
-        title: "Remaining (Months)",
-        dataIndex: "nombre",
-        render: (nombre) => <Badge count={nombre} />,
-      },
-      {
-        title: "Start Date",
-        dataIndex: "paymentStartDate",
-        render: (date) => new Date(date).toDateString(),
-      },
-      {
-        title: "End Date",
-        dataIndex: "paymentEndDate",
-        render: (date) => new Date(date).toDateString(),
-      },
-      {
-        title: "Paid",
-        dataIndex: "isPaid",
-        render: (isPaid) => (
-          <Badge
-            status={isPaid ? "success" : "processing"}
-            text={isPaid ? "success" : "Processing"}
-          />
-        ),
-      },
-      {
-        render: () => (
-          <div>
-            <Dropdown
-              menu={{
-                items: [
-                  {
-                    key: "edit",
-                    label: (
-                      <Flex align="center">
-                        <Cog size={15} style={{ marginRight: 5 }} />
-                        <span>Edit</span>
-                      </Flex>
-                    ),
-                  },
-                  {
-                    key: "remove",
-                    label: (
-                      <Flex align="center">
-                        <BadgeX size={15} style={{ marginRight: 5 }} />
-                        <span>Remove</span>
-                      </Flex>
-                    ),
-                  },
-                  {
-                    type: "divider",
-                  },
-                  {
-                    key: "print",
-                    label: (
-                      <Flex align="center">
-                        <Printer size={15} style={{ marginRight: 5 }} />
-                        <span>Print</span>
-                      </Flex>
-                    ),
-                  },
-                ],
-              }}
-              trigger={["click"]}
-            >
-              <EllipsisVertical size={15} />
-            </Dropdown>
-          </div>
-        ),
-      },
-    ];
+  const ordersColumns = (client) => [
+    {
+      title: "Name",
+      dataIndex: "payDay",
+      dataIndex: "name",
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      render: (amount) => (
+        <span style={{ fontWeight: 600 }}>{amount / 100} DZD</span>
+      ),
+    },
+    {
+      title: "Remaining (Months)",
+      dataIndex: "nombre",
+      render: (nombre) => <Badge count={nombre} />,
+    },
+    {
+      title: "Start Date",
+      dataIndex: "paymentStartDate",
+      render: (date) => new Date(date).toDateString(),
+    },
+    {
+      title: "End Date",
+      dataIndex: "paymentEndDate",
+      render: (date) => new Date(date).toDateString(),
+    },
+    {
+      title: "Paid",
+      dataIndex: "isPaid",
+      render: (isPaid) => (
+        <Badge
+          status={isPaid ? "success" : "processing"}
+          text={isPaid ? "success" : "Processing"}
+        />
+      ),
+    },
+    {
+      render: (order) => (
+        <div>
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: "edit",
+                  label: (
+                    <Flex
+                      align="center"
+                      onClick={handleEditOrder(order, client)}
+                    >
+                      <Cog size={15} style={{ marginRight: 5 }} />
+                      <span>Edit</span>
+                    </Flex>
+                  ),
+                },
+                {
+                  key: "remove",
+                  label: (
+                    <Flex
+                      align="center"
+                      onClick={handleDeleteOrder(order, client)}
+                    >
+                      <BadgeX size={15} style={{ marginRight: 5 }} />
+                      <span>Remove</span>
+                    </Flex>
+                  ),
+                },
+                {
+                  type: "divider",
+                },
+                {
+                  key: "print",
+                  label: (
+                    <Flex
+                      align="center"
+                      onClick={handlePrintOrder(order, client)}
+                    >
+                      <Printer size={15} style={{ marginRight: 5 }} />
+                      <span>Print</span>
+                    </Flex>
+                  ),
+                },
+              ],
+            }}
+            trigger={["click"]}
+          >
+            <EllipsisVertical size={15} />
+          </Dropdown>
+        </div>
+      ),
+    },
+  ];
 
+  const ExpandedRowRender = ({ orders, ...client }) => {
     return (
       <Table
         style={{ margin: "10px 0" }}
-        columns={columns}
+        columns={ordersColumns(client)}
         dataSource={orders}
         pagination={false}
         size="small"
@@ -1051,62 +1141,61 @@ export default function HomePage() {
           >
             New Client
           </Button>
-
-          <Tooltip title="Print">
-            <Button
-              onClick={onPrint}
-              shape="circle"
-              icon={<Printer size={15} />}
-              disabled={selectedRowKeys.length == 0}
-            />
-          </Tooltip>
-          <Tooltip title="Export">
-            <Button
-              onClick={onExport}
-              type="primary"
-              disabled={selectedRowKeys.length == 0}
-              shape="circle"
-              icon={<Download size={15} />}
-            />
-          </Tooltip>
         </div>
         <Divider className="control-newclients-divider" />
         <Table
-          columns={newClientsColumns({ selectedRowKeys })}
-          dataSource={newClients}
+          columns={newClientsColumns}
+          dataSource={clients}
           pagination={false}
           size="middle"
           scroll={{
             y: pageHeight,
           }}
-          rowSelection={{
-            selectedRowKeys,
-            onChange: setSelectedRowKeys,
-          }}
           expandable={{
-            expandedRowRender,
+            expandedRowRender: ExpandedRowRender,
           }}
         />
 
         <iframe ref={iframeRef} style={{ display: "none" }} />
-        {/*<Divider />
-          <Table
-        columns={newClientsColumns}
-        dataSource={newClients}
-        pagination={false}
-        size="small"
-        scroll={{
-          y: pageHeight,
-        }}
-      />*/}
       </div>
       <Modal
         open={addNewClientModal}
         title="Add New Client"
-        width={"100%"}
         destroyOnClose
         onCancel={handleOnAddNewClientModalCancel}
-      ></Modal>
+        onOk={handleAddNewClient}
+        style={{
+          top: 0,
+          left: 0,
+          margin: 0,
+          padding: 0,
+          maxWidth: "unset",
+        }}
+        styles={{
+          content: {
+            height: "100vh",
+            borderRadius: 0,
+          },
+        }}
+        width="100%"
+      >
+        <Formik
+          initialValues={{
+            fname: "",
+            lname: "",
+            phone: "",
+          }}
+        >
+          {({
+            values,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            setFieldValue,
+            isSubmitting,
+          }) => <h1>hello world</h1>}
+        </Formik>
+      </Modal>
     </>
   );
 }

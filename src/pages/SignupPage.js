@@ -59,7 +59,7 @@ export default function SignupPage() {
   };
 
   return (
-    <main className="page page_login">
+    <main className="page page_signup">
       <Formik
         initialValues={{
           fname: "",
@@ -86,8 +86,9 @@ export default function SignupPage() {
           <div className="form">
             <h2 className="header">Sign Up</h2>
             <p className="subheader">Enter your credentials below</p>
-            <Flex vertical={false} justify="space-between">
+            <Flex align="center" justify="space-around" wrap="wrap">
               <AppInputTextFeild
+                style={{ marginRight: 5, flex: 1 }}
                 name="fname"
                 label="First Name"
                 placeholder="john"
@@ -100,6 +101,7 @@ export default function SignupPage() {
               />
 
               <AppInputTextFeild
+                style={{ marginRight: 5, flex: 1 }}
                 name="lname"
                 label="Last Name"
                 placeholder="doe"
@@ -109,6 +111,18 @@ export default function SignupPage() {
                 status="secondary"
                 touched={touched.lname}
                 error={errors.lname}
+              />
+              <AppInputTextFeild
+                style={{ marginRight: 5, flex: 1 }}
+                name="ccp"
+                label="CCP"
+                placeholder="**********"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.ccp}
+                status="secondary"
+                touched={touched.ccp}
+                error={errors.ccp}
               />
             </Flex>
             <AppInputTextFeild
@@ -146,7 +160,7 @@ export default function SignupPage() {
                   label: state.name,
                 }))}
                 value={values.state}
-                size="large"
+                size="middle"
                 status={touched.state && errors.state ? "error" : ""}
               />
 
@@ -166,7 +180,7 @@ export default function SignupPage() {
                   label: city.name,
                 }))}
                 value={values.city}
-                size="large"
+                size="middle"
                 status={touched.city && errors.city ? "error" : ""}
                 disabled={!values.state}
               />
