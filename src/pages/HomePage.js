@@ -32,7 +32,7 @@ const pageHeight =
 const NEW_CLIENTS = [
   {
     _id: "12a9b3f61e5d9e00c1f4b2a8",
-    title: "MR",
+
     fname: "AZIZ",
     lname: "BOUCHAIR",
     ccp: {
@@ -75,7 +75,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "23b1d6f82f9c1a00d3f6e2b7",
-    title: "MRS",
+
     fname: "SARA",
     lname: "BOUCHAREB",
     ccp: {
@@ -100,7 +100,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "34e8f4b72c6f9d00e2c4d9f3",
-    title: "MR",
+
     fname: "MOHAMED",
     lname: "BOURKA",
     ccp: {
@@ -125,7 +125,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "45f2a3e91b8e2f00c3f5c1b4",
-    title: "MR",
+
     fname: "NOUR",
     lname: "CHERIF",
     ccp: {
@@ -150,7 +150,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "56g7d5h84c9d7f00d4g8e7c5",
-    title: "MRS",
+
     fname: "SOUAD",
     lname: "LAMDANI",
     ccp: {
@@ -175,7 +175,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "67h9j6k95f1e8g00e5h9f8d6",
-    title: "MR",
+
     fname: "AHMED",
     lname: "DJEBBOUR",
     ccp: {
@@ -200,7 +200,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "78i2l7m96g2f9h00f6i1g9e7",
-    title: "MRS",
+
     fname: "NADIA",
     lname: "KACI",
     ccp: {
@@ -225,7 +225,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "89j3n8o97h3g0i00g7j2h0f8",
-    title: "MR",
+
     fname: "KARIM",
     lname: "BENMANSOUR",
     ccp: {
@@ -250,7 +250,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "90k4o9p98i4h1j00h8k3i1g9",
-    title: "MRS",
+
     fname: "LINA",
     lname: "SAID",
     ccp: {
@@ -275,7 +275,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "12a5p0q99j5i2k00i9l4j2h0",
-    title: "MR",
+
     fname: "SAMIR",
     lname: "OUALI",
     ccp: {
@@ -300,7 +300,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "13b6q1r00k6j3l00j0m5k3i1",
-    title: "MRS",
+
     fname: "YASMINA",
     lname: "KHERBOUCHE",
     ccp: {
@@ -325,7 +325,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "14c7r2s11l7k4m00k1n6l4j2",
-    title: "MR",
+
     fname: "HASSAN",
     lname: "BOUALI",
     ccp: {
@@ -350,7 +350,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "15d8s3t22m8l5n00l2o7m5k3",
-    title: "MRS",
+
     fname: "SAMIRA",
     lname: "DJELLOULI",
     ccp: {
@@ -375,7 +375,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "16e9t4u33n9m6o00m3p8n6l4",
-    title: "MR",
+
     fname: "FATIMA",
     lname: "HAMADI",
     ccp: {
@@ -400,7 +400,7 @@ const NEW_CLIENTS = [
   },
   {
     _id: "17f0u5v44o0n7p00n4q9o7m5",
-    title: "MR",
+
     fname: "RACHID",
     lname: "SAOUDI",
     ccp: {
@@ -428,25 +428,37 @@ const NEW_CLIENTS = [
 const validationSchema = Yup.object({
   fname: Yup.string().required().label("First Name"),
   lname: Yup.string().required().label("Last Name"),
+  idn: Yup.string()
+    .matches(/^\d{18}$/, "ID Number must be exactly 18 digits")
+    .required()
+    .label("ID Number"),
   phone: Yup.string()
     .required()
     .matches(
       /^(0(5|6|7)\d{8}|0(2|3|4|9)\d{7})$/,
-      "Phone must be a valid Number"
+      "Phone Number must be a valid Number"
     )
     .label("Phone Number"),
-  idn: Yup.string(),
+
   ccp: Yup.object({
-    number: Yup.string(),
-    key: Yup.string(),
+    number: Yup.string()
+      .matches(/^\d{10}$/, "CCP N° must be exactly 10 digits") // 10 digits
+      .required()
+      .label("CCP N°"),
+    key: Yup.string()
+      .matches(/^\d{2}$/, "CCP Key must be exactly 2 digits") // 2 digits
+      .required()
+      .label("CCP Key"),
   }),
-  payDay: Yup.mixed()
+
+  payDay: Yup.number()
     .oneOf(
       Array.from({ length: 31 }, (v, k) => k + 1),
       "PayDay must be a number between 1 and 31"
     )
     .required()
-    .label("PayDay"),
+    .label("Pay Day"),
+  isAdmin: Yup.boolean().default(false),
 });
 
 export default function HomePage() {
@@ -466,8 +478,8 @@ export default function HomePage() {
     setClients(newClients);
   }, []);
 
-  const handleAddNewClient = async () => {
-    console.log("New User");
+  const handleAddNewClient = async (client) => {
+    console.log("client: ", client);
   };
 
   const handleEditClient = (client) => () => {};
@@ -1164,27 +1176,22 @@ export default function HomePage() {
         destroyOnClose
         onCancel={handleOnAddNewClientModalCancel}
         onOk={handleAddNewClient}
-        style={{
-          top: 0,
-          left: 0,
-          margin: 0,
-          padding: 0,
-          maxWidth: "unset",
-        }}
-        styles={{
-          content: {
-            height: "100vh",
-            borderRadius: 0,
-          },
-        }}
-        width="100%"
+        footer={false}
       >
         <Formik
           initialValues={{
             fname: "",
             lname: "",
+            idn: null,
             phone: "",
+            ccp: {
+              number: null,
+              key: null,
+            },
+            payDay: null,
           }}
+          validationSchema={validationSchema}
+          onSubmit={handleAddNewClient}
         >
           {({
             values,
@@ -1193,7 +1200,117 @@ export default function HomePage() {
             handleSubmit,
             setFieldValue,
             isSubmitting,
-          }) => <h1>hello world</h1>}
+            touched,
+            errors,
+            isValid,
+          }) => (
+            <>
+              <Flex wrap="wrap" flex={1}>
+                <AppInputTextFeild
+                  style={{ marginRight: 5, flex: 1 }}
+                  name="fname"
+                  label="First Name"
+                  placeholder="John"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.fname}
+                  status="secondary"
+                  touched={touched.fname}
+                  error={errors.fname}
+                />
+                <AppInputTextFeild
+                  style={{ marginRight: 5, flex: 1 }}
+                  name="lname"
+                  label="Last Name"
+                  placeholder="Doe"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.lname}
+                  status="secondary"
+                  touched={touched.lname}
+                  error={errors.lname}
+                />
+              </Flex>
+              <Flex wrap="wrap">
+                <AppInputTextFeild
+                  style={{ marginRight: 5, flex: 0.7 }}
+                  name="ccp.number"
+                  label="CCP N°"
+                  placeholder="**********"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.ccp?.number}
+                  status="secondary"
+                  touched={touched.ccp?.number}
+                  error={errors.ccp?.number}
+                  maxlength="10"
+                />
+                <AppInputTextFeild
+                  style={{ marginRight: 5, flex: 0.3 }}
+                  name="ccp.key"
+                  label="Key"
+                  placeholder="**"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.ccp?.key}
+                  status="secondary"
+                  touched={touched.ccp?.key}
+                  error={errors.ccp?.key}
+                  maxlength="2"
+                />
+              </Flex>
+              <Flex wrap="wrap">
+                <AppInputTextFeild
+                  style={{ marginRight: 5, flex: 0.4 }}
+                  name="idn"
+                  label="ID N°"
+                  placeholder="ID Number"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.idn}
+                  status="primary"
+                  touched={touched.idn}
+                  error={errors.idn}
+                  maxlength="18"
+                />
+                <AppInputTextFeild
+                  style={{ marginRight: 5, marginRight: 5, flex: 0.4 }}
+                  name="phone"
+                  label="Phone N°"
+                  placeholder="0783773369"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.phone}
+                  status="primary"
+                  touched={touched.phone}
+                  error={errors.phone}
+                />
+                <AppInputTextFeild
+                  style={{ marginRight: 5, flex: 0.2 }}
+                  name="payDay"
+                  label="Pay Day"
+                  placeholder="14"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.payDay}
+                  status="primary"
+                  touched={touched.payDay}
+                  error={errors.payDay}
+                  maxlength={2}
+                />
+              </Flex>
+              <Button
+                style={{ fontWeight: "600", float: "right", marginTop: 10 }}
+                type="primary"
+                onClick={handleSubmit}
+                disabled={!isValid}
+                loading={isSubmitting}
+              >
+                Create
+              </Button>
+              <div style={{ clear: "both" }}></div>
+            </>
+          )}
         </Formik>
       </Modal>
     </>
