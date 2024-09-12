@@ -2,7 +2,6 @@ import "./HomePage.css";
 import React, { useState, useRef, useEffect } from "react";
 
 import {
-  AutoComplete,
   Divider,
   Table,
   Button,
@@ -12,6 +11,8 @@ import {
   Dropdown,
   Flex,
   message,
+  Input,
+  DatePicker,
 } from "antd";
 import {
   Printer,
@@ -20,6 +21,8 @@ import {
   BadgeX,
   Cog,
   DiamondPlus,
+  User,
+  Package,
 } from "lucide-react";
 import * as Yup from "yup";
 
@@ -42,7 +45,7 @@ const NEW_CLIENTS = [
     phone: "0776543210",
     idn: "135792468013579",
     createdAt: "2024-09-06T19:49:09.459Z",
-    payDay: "9",
+
     orders: [
       {
         _id: "1",
@@ -85,7 +88,7 @@ const NEW_CLIENTS = [
     phone: "0698765432",
     idn: "246813579024680",
     createdAt: "2024-09-06T19:50:12.459Z",
-    payDay: "10",
+
     orders: [
       {
         _id: "1",
@@ -110,7 +113,7 @@ const NEW_CLIENTS = [
     phone: "0754321987",
     idn: "159753468012345",
     createdAt: "2024-09-06T19:52:34.459Z",
-    payDay: "5",
+
     orders: [
       {
         _id: "1",
@@ -135,7 +138,7 @@ const NEW_CLIENTS = [
     phone: "0785432190",
     idn: "123456789012345",
     createdAt: "2024-09-06T19:54:10.459Z",
-    payDay: "20",
+
     orders: [
       {
         _id: "1",
@@ -160,7 +163,7 @@ const NEW_CLIENTS = [
     phone: "0665432198",
     idn: "135468024135791",
     createdAt: "2024-09-06T19:55:20.459Z",
-    payDay: "25",
+
     orders: [
       {
         _id: "1",
@@ -185,7 +188,7 @@ const NEW_CLIENTS = [
     phone: "0776543212",
     idn: "987654321012345",
     createdAt: "2024-09-06T19:57:34.459Z",
-    payDay: "18",
+
     orders: [
       {
         _id: "1",
@@ -210,7 +213,7 @@ const NEW_CLIENTS = [
     phone: "0654321987",
     idn: "123456789987654",
     createdAt: "2024-09-06T19:58:10.459Z",
-    payDay: "8",
+
     orders: [
       {
         _id: "1",
@@ -235,7 +238,7 @@ const NEW_CLIENTS = [
     phone: "0786543219",
     idn: "159753246801357",
     createdAt: "2024-09-06T19:59:12.459Z",
-    payDay: "12",
+
     orders: [
       {
         _id: "1",
@@ -260,7 +263,7 @@ const NEW_CLIENTS = [
     phone: "0676543218",
     idn: "246813579013579",
     createdAt: "2024-09-06T20:00:15.459Z",
-    payDay: "22",
+
     orders: [
       {
         _id: "1",
@@ -285,7 +288,7 @@ const NEW_CLIENTS = [
     phone: "0775432109",
     idn: "135792468013579",
     createdAt: "2024-09-06T20:01:18.459Z",
-    payDay: "14",
+
     orders: [
       {
         _id: "1",
@@ -310,7 +313,7 @@ const NEW_CLIENTS = [
     phone: "0674321098",
     idn: "987654321012345",
     createdAt: "2024-09-06T20:02:22.459Z",
-    payDay: "6",
+
     orders: [
       {
         _id: "1",
@@ -335,7 +338,7 @@ const NEW_CLIENTS = [
     phone: "0783210987",
     idn: "123456789012345",
     createdAt: "2024-09-06T20:03:25.459Z",
-    payDay: "28",
+
     orders: [
       {
         _id: "1",
@@ -360,7 +363,7 @@ const NEW_CLIENTS = [
     phone: "0665432109",
     idn: "135468024135791",
     createdAt: "2024-09-06T20:04:28.459Z",
-    payDay: "18",
+
     orders: [
       {
         _id: "1",
@@ -385,7 +388,7 @@ const NEW_CLIENTS = [
     phone: "0653210987",
     idn: "159753468013579",
     createdAt: "2024-09-06T20:05:31.459Z",
-    payDay: "17",
+
     orders: [
       {
         _id: "1",
@@ -410,7 +413,7 @@ const NEW_CLIENTS = [
     phone: "0776543210",
     idn: "987654321098765",
     createdAt: "2024-09-06T20:06:34.459Z",
-    payDay: "8",
+
     orders: [
       {
         _id: "1",
@@ -425,7 +428,7 @@ const NEW_CLIENTS = [
   },
 ];
 
-const validationSchema = Yup.object({
+const userValidationSchema = Yup.object({
   fname: Yup.string().required().label("First Name"),
   lname: Yup.string().required().label("Last Name"),
   idn: Yup.string()
@@ -450,20 +453,22 @@ const validationSchema = Yup.object({
       .required()
       .label("CCP Key"),
   }),
+});
 
-  payDay: Yup.number()
-    .oneOf(
-      Array.from({ length: 31 }, (v, k) => k + 1),
-      "PayDay must be a number between 1 and 31"
-    )
-    .required()
-    .label("Pay Day"),
-  isAdmin: Yup.boolean().default(false),
+const orderValidationSchema = Yup.object({
+  name: Yup.string().required().label("Product Name"),
+  amount: Yup.number(),
+  nombre: Yup.number(),
+  paymentStartDate: Yup.date(),
+  paymentEndDate: Yup.date(),
 });
 
 export default function HomePage() {
   const [clients, setClients] = useState([]);
   const [addNewClientModal, setAddNewClientModal] = useState(false);
+  const [addNewPurchaseModal, setAddNewPurchaseModal] = useState(false);
+
+  const [confirmModal, confirmModalContextHolder] = Modal.useModal();
 
   const iframeRef = useRef(null);
 
@@ -478,13 +483,23 @@ export default function HomePage() {
     setClients(newClients);
   }, []);
 
-  const handleAddNewClient = async (client) => {
-    console.log("client: ", client);
+  const handleAddNewClient = async (clientData) => {
+    const client = clientData;
+    client["key"] = "415qs6d465sq4d";
+    client["orders"] = [];
+    setClients([client, ...clients]);
+    setAddNewClientModal(false);
+    message.success("New Client Added Successfully");
   };
 
   const handleEditClient = (client) => () => {};
 
-  const handleDeleteClient = (_client) => () => {
+  const handleDeleteClient = (_client) => async () => {
+    const confirmed = await confirmModal.confirm({
+      title: "Delete",
+      content: "Are you sure you wanna delete this !",
+    });
+    if (!confirmed) return;
     let new_clients = [...clients];
     const client_index = new_clients.findIndex(
       (client) => client._id == _client._id
@@ -501,13 +516,24 @@ export default function HomePage() {
       </span>
     );
   };
-  const handleAddPurchase = (client) => () => {};
+  const handleAddPurchase = (client) => () => {
+    setAddNewPurchaseModal(true);
+  };
+
+  const handleCancelNewPurchase = () => {
+    setAddNewPurchaseModal(false);
+  };
 
   const handleEditOrder = (order, client) => () => {
     console.log("Edit Order", order._id, client._id);
   };
 
-  const handleDeleteOrder = (_order, _client) => () => {
+  const handleDeleteOrder = (_order, _client) => async () => {
+    const confirmed = await confirmModal.confirm({
+      title: "Delete",
+      content: "Are you sure you wanna delete this !",
+    });
+    if (!confirmed) return;
     let new_clients = [...clients];
     const client_index = new_clients.findIndex(
       (client) => client._id === _client._id
@@ -980,11 +1006,6 @@ export default function HomePage() {
       render: (orders) => orders.length,
     },
     {
-      title: "Pay Day",
-      dataIndex: "payDay",
-      render: (payDay) => <Tag color="blue">{payDay}</Tag>,
-    },
-    {
       title: "Created At",
       dataIndex: "createdAt",
       render: (createdAt) => <Tag>{new Date(createdAt).toLocaleString()}</Tag>,
@@ -1171,12 +1192,17 @@ export default function HomePage() {
         <iframe ref={iframeRef} style={{ display: "none" }} />
       </div>
       <Modal
+        title={
+          <Flex align="center">
+            <User size={18} style={{ marginRight: 2 }} />
+            Add New Client
+          </Flex>
+        }
         open={addNewClientModal}
-        title="Add New Client"
-        destroyOnClose
         onCancel={handleOnAddNewClientModalCancel}
         onOk={handleAddNewClient}
         footer={false}
+        destroyOnClose={true}
       >
         <Formik
           initialValues={{
@@ -1188,9 +1214,8 @@ export default function HomePage() {
               number: null,
               key: null,
             },
-            payDay: null,
           }}
-          validationSchema={validationSchema}
+          validationSchema={userValidationSchema}
           onSubmit={handleAddNewClient}
         >
           {({
@@ -1259,7 +1284,7 @@ export default function HomePage() {
                   maxlength="2"
                 />
               </Flex>
-              <Flex wrap="wrap">
+              <Flex wrap="wrap" align="flex-end">
                 <AppInputTextFeild
                   style={{ marginRight: 5, flex: 0.4 }}
                   name="idn"
@@ -1285,19 +1310,6 @@ export default function HomePage() {
                   touched={touched.phone}
                   error={errors.phone}
                 />
-                <AppInputTextFeild
-                  style={{ marginRight: 5, flex: 0.2 }}
-                  name="payDay"
-                  label="Pay Day"
-                  placeholder="14"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.payDay}
-                  status="primary"
-                  touched={touched.payDay}
-                  error={errors.payDay}
-                  maxlength={2}
-                />
               </Flex>
               <Button
                 style={{ fontWeight: "600", float: "right", marginTop: 10 }}
@@ -1313,6 +1325,63 @@ export default function HomePage() {
           )}
         </Formik>
       </Modal>
+      <Modal
+        title={
+          <Flex align="center">
+            <Package size={18} style={{ marginRight: 2 }} />
+            Add New Purchase
+          </Flex>
+        }
+        open={addNewPurchaseModal}
+        onCancel={handleCancelNewPurchase}
+        destroyOnClose={true}
+      >
+        <Formik
+          initialValues={{
+            name: "",
+            amount: null,
+            nombre: 3,
+          }}
+        >
+          {({ values, setFieldValue }) => (
+            <div className="purchase-form">
+              <label>Name</label>
+              <Input placeholder="Sony PS4" value={values.name} />
+              <label>Amount</label>
+              <Input
+                type="number"
+                placeholder="2000"
+                suffix="DZD"
+                value={values.amount}
+              />
+              <label>Nombre</label>
+              <Input
+                type="number"
+                suffix="Time"
+                minLength={1}
+                maxLength={2}
+                max={99}
+                value={values.nombre}
+              />
+              <label>Timeline</label>
+              <DatePicker.RangePicker
+                onChange={(dates, dateStrings) => {
+                  if (!dates) return;
+                  const startDate = dates[0];
+                  const endDate = dates[1];
+
+                  // Calculate the difference in months
+                  const monthDifference = endDate.diff(startDate, "month");
+
+                  setFieldValue("nombre", monthDifference);
+                }}
+                allowClear
+              />
+            </div>
+          )}
+        </Formik>
+      </Modal>
+      {confirmModalContextHolder}
     </>
   );
 }
