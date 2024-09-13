@@ -14,6 +14,8 @@ import {
   Input,
   DatePicker,
 } from "antd";
+import dayjs from "dayjs";
+
 import {
   Printer,
   BadgePlus,
@@ -27,7 +29,7 @@ import {
 import * as Yup from "yup";
 
 import AppInputTextFeild from "../components/AppInputTextFeild";
-import { Formik } from "formik";
+import { ErrorMessage, Formik } from "formik";
 
 const pageHeight =
   window.document.documentElement.scrollHeight - (99 + 53 + 32);
@@ -52,8 +54,7 @@ const NEW_CLIENTS = [
         name: "Iphone 15 Mini",
         amount: 600_000,
         nombre: 7,
-        paymentStartDate: "2024-09-06T19:49:09.459Z",
-        paymentEndDate: "2025-02-06T19:49:09.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
       {
@@ -61,8 +62,7 @@ const NEW_CLIENTS = [
         name: "Laptop HP",
         amount: 200_000,
         nombre: 12,
-        paymentStartDate: "2024-09-06T19:49:09.459Z",
-        paymentEndDate: "2025-02-06T19:49:09.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: false,
       },
       {
@@ -70,8 +70,7 @@ const NEW_CLIENTS = [
         name: "Samsung Fridge",
         amount: 10_000,
         nombre: 15,
-        paymentStartDate: "2024-09-06T19:49:09.459Z",
-        paymentEndDate: "2025-02-06T19:49:09.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: false,
       },
     ],
@@ -95,8 +94,7 @@ const NEW_CLIENTS = [
         name: "Smartphone Samsung",
         amount: 90_000,
         nombre: 18,
-        paymentStartDate: "2024-09-06T19:50:12.459Z",
-        paymentEndDate: "2025-01-06T19:50:12.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -120,8 +118,7 @@ const NEW_CLIENTS = [
         name: "Tablet Lenovo",
         amount: 150_000,
         nombre: 30,
-        paymentStartDate: "2024-09-06T19:52:34.459Z",
-        paymentEndDate: "2025-06-06T19:52:34.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -145,8 +142,7 @@ const NEW_CLIENTS = [
         name: "Gaming PC",
         amount: 300_000,
         nombre: 20,
-        paymentStartDate: "2024-09-06T19:54:10.459Z",
-        paymentEndDate: "2025-01-06T19:54:10.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -170,8 +166,7 @@ const NEW_CLIENTS = [
         name: "Washing Machine LG",
         amount: 180_000,
         nombre: 25,
-        paymentStartDate: "2024-09-06T19:55:20.459Z",
-        paymentEndDate: "2025-03-06T19:55:20.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -195,8 +190,7 @@ const NEW_CLIENTS = [
         name: "Fridge Beko",
         amount: 220_000,
         nombre: 12,
-        paymentStartDate: "2024-09-06T19:57:34.459Z",
-        paymentEndDate: "2025-06-06T19:57:34.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -220,8 +214,7 @@ const NEW_CLIENTS = [
         name: "Microwave Panasonic",
         amount: 95_000,
         nombre: 40,
-        paymentStartDate: "2024-09-06T19:58:10.459Z",
-        paymentEndDate: "2025-02-06T19:58:10.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -245,8 +238,7 @@ const NEW_CLIENTS = [
         name: "Camera Canon",
         amount: 175_000,
         nombre: 35,
-        paymentStartDate: "2024-09-06T19:59:12.459Z",
-        paymentEndDate: "2025-01-06T19:59:12.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -270,8 +262,7 @@ const NEW_CLIENTS = [
         name: "Smartwatch Apple",
         amount: 150_000,
         nombre: 22,
-        paymentStartDate: "2024-09-06T20:00:15.459Z",
-        paymentEndDate: "2025-04-06T20:00:15.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -295,8 +286,7 @@ const NEW_CLIENTS = [
         name: "Gaming Console PS5",
         amount: 120_000,
         nombre: 24,
-        paymentStartDate: "2024-09-06T20:01:18.459Z",
-        paymentEndDate: "2025-05-06T20:01:18.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -320,8 +310,7 @@ const NEW_CLIENTS = [
         name: "Washing Machine Samsung",
         amount: 130_000,
         nombre: 36,
-        paymentStartDate: "2024-09-06T20:02:22.459Z",
-        paymentEndDate: "2025-03-06T20:02:22.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -345,8 +334,7 @@ const NEW_CLIENTS = [
         name: "TV Sony",
         amount: 190_000,
         nombre: 45,
-        paymentStartDate: "2024-09-06T20:03:25.459Z",
-        paymentEndDate: "2025-06-06T20:03:25.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -370,8 +358,7 @@ const NEW_CLIENTS = [
         name: "Fridge Samsung",
         amount: 220_000,
         nombre: 20,
-        paymentStartDate: "2024-09-06T20:04:28.459Z",
-        paymentEndDate: "2025-05-06T20:04:28.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -395,8 +382,7 @@ const NEW_CLIENTS = [
         name: "Dishwasher Bosch",
         amount: 145_000,
         nombre: 22,
-        paymentStartDate: "2024-09-06T20:05:31.459Z",
-        paymentEndDate: "2025-04-06T20:05:31.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -420,8 +406,7 @@ const NEW_CLIENTS = [
         name: "Microwave LG",
         amount: 95_000,
         nombre: 40,
-        paymentStartDate: "2024-09-06T20:06:34.459Z",
-        paymentEndDate: "2025-03-06T20:06:34.459Z",
+        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
       },
     ],
@@ -457,10 +442,20 @@ const userValidationSchema = Yup.object({
 
 const orderValidationSchema = Yup.object({
   name: Yup.string().required().label("Product Name"),
-  amount: Yup.number(),
-  nombre: Yup.number(),
-  paymentStartDate: Yup.date(),
-  paymentEndDate: Yup.date(),
+  amount: Yup.number().required().label("Amount"),
+  nombre: Yup.number().required().label("Nombre"),
+  dates: Yup.array()
+    .of(Yup.date().required("Date is required"))
+    .min(2, "Please select a start and end date")
+    .test(
+      "endDateAfterStartDate",
+      "End date must be after start date",
+      (dates) => {
+        if (!dates || dates.length < 2) return false;
+        const [startDate, endDate] = dates;
+        return endDate && startDate && endDate > startDate;
+      }
+    ),
 });
 
 export default function HomePage() {
@@ -471,6 +466,8 @@ export default function HomePage() {
   const [confirmModal, confirmModalContextHolder] = Modal.useModal();
 
   const iframeRef = useRef(null);
+
+  const [tempClient, setTempClient] = useState(null);
 
   const handleOnAddNewClientModalOpen = () => setAddNewClientModal(true);
   const handleOnAddNewClientModalCancel = () => setAddNewClientModal(false);
@@ -485,8 +482,11 @@ export default function HomePage() {
 
   const handleAddNewClient = async (clientData) => {
     const client = clientData;
-    client["key"] = "415qs6d465sq4d";
+
+    client["key"] = "415qs6d465sq4d" + Math.random() * 10000;
+    client["createdAt"] = new Date().toISOString();
     client["orders"] = [];
+
     setClients([client, ...clients]);
     setAddNewClientModal(false);
     message.success("New Client Added Successfully");
@@ -517,11 +517,39 @@ export default function HomePage() {
     );
   };
   const handleAddPurchase = (client) => () => {
+    setTempClient(client);
     setAddNewPurchaseModal(true);
   };
 
   const handleCancelNewPurchase = () => {
     setAddNewPurchaseModal(false);
+    setTempClient(null);
+  };
+
+  const handleSubmitNewPurchase = async (purchase) => {
+    const newPurchase = { ...purchase };
+    const newDates = [...newPurchase.dates];
+    const [startDate, endDate] = newDates;
+    newDates[0] = startDate.toISOString();
+    newDates[1] = endDate.toISOString();
+    newPurchase["_id"] = "qs1d321qsd5" + Math.random() * 1000000;
+    newPurchase["dates"] = newDates;
+    newPurchase["isPaid"] = false;
+
+    console.log("client: ", tempClient);
+    console.log("purchase: ", newPurchase);
+
+    const client_index = clients.findIndex(
+      (client) => client._id == tempClient._id
+    );
+    if (client_index == -1) return;
+    const new_clients = [...clients];
+    const orders = new_clients[client_index].orders;
+    new_clients[client_index].orders = [newPurchase, ...orders];
+    setClients(new_clients);
+    setAddNewPurchaseModal(false);
+    setTempClient(null);
+    message.success("New Purchase Added Successfully");
   };
 
   const handleEditOrder = (order, client) => () => {
@@ -1059,15 +1087,15 @@ export default function HomePage() {
   const ordersColumns = (client) => [
     {
       title: "Name",
-      dataIndex: "payDay",
       dataIndex: "name",
+      render: (name) => (
+        <span style={{ textTransform: "uppercase" }}>{name}</span>
+      ),
     },
     {
       title: "Amount",
       dataIndex: "amount",
-      render: (amount) => (
-        <span style={{ fontWeight: 600 }}>{amount / 100} DZD</span>
-      ),
+      render: (amount) => <span style={{ fontWeight: 600 }}>{amount} DZD</span>,
     },
     {
       title: "Remaining (Months)",
@@ -1076,13 +1104,13 @@ export default function HomePage() {
     },
     {
       title: "Start Date",
-      dataIndex: "paymentStartDate",
-      render: (date) => new Date(date).toDateString(),
+      dataIndex: "dates",
+      render: (dates) => new Date(dates[0]).toDateString(),
     },
     {
       title: "End Date",
-      dataIndex: "paymentEndDate",
-      render: (date) => new Date(date).toDateString(),
+      dataIndex: "dates",
+      render: (dates) => new Date(dates[1]).toDateString(),
     },
     {
       title: "Paid",
@@ -1201,8 +1229,8 @@ export default function HomePage() {
         open={addNewClientModal}
         onCancel={handleOnAddNewClientModalCancel}
         onOk={handleAddNewClient}
-        footer={false}
         destroyOnClose={true}
+        footer={false}
       >
         <Formik
           initialValues={{
@@ -1335,48 +1363,114 @@ export default function HomePage() {
         open={addNewPurchaseModal}
         onCancel={handleCancelNewPurchase}
         destroyOnClose={true}
+        footer={false}
       >
         <Formik
           initialValues={{
             name: "",
             amount: null,
             nombre: 3,
+            dates: [dayjs(), null],
           }}
+          validationSchema={orderValidationSchema}
+          onSubmit={handleSubmitNewPurchase}
         >
-          {({ values, setFieldValue }) => (
+          {({
+            values,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            setFieldValue,
+            isSubmitting,
+            isValid,
+          }) => (
             <div className="purchase-form">
               <label>Name</label>
-              <Input placeholder="Sony PS4" value={values.name} />
+              <Input
+                name="name"
+                placeholder="Sony PS4"
+                value={values.name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              <ErrorMessage name="name">
+                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              </ErrorMessage>
               <label>Amount</label>
               <Input
+                name="amount"
                 type="number"
                 placeholder="2000"
                 suffix="DZD"
                 value={values.amount}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
+              <ErrorMessage name="amount">
+                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              </ErrorMessage>
+
               <label>Nombre</label>
               <Input
+                name="nombre"
                 type="number"
                 suffix="Time"
+                min={1}
+                max={99}
                 minLength={1}
                 maxLength={2}
-                max={99}
                 value={values.nombre}
+                onChange={(event) => {
+                  if (!values.dates) return handleChange(event);
+                  const monthsToAdd = event.target.value;
+                  const newDate = dayjs(values.dates[0]).add(
+                    monthsToAdd,
+                    "month"
+                  );
+                  const newDates = [...values.dates];
+                  newDates[1] = newDate;
+                  setFieldValue("dates", newDates);
+                  handleChange(event);
+                }}
+                onBlur={handleBlur}
               />
+              <ErrorMessage name="nombre">
+                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              </ErrorMessage>
               <label>Timeline</label>
               <DatePicker.RangePicker
-                onChange={(dates, dateStrings) => {
+                onBlur={handleBlur}
+                onChange={(dates) => {
                   if (!dates) return;
+
                   const startDate = dates[0];
                   const endDate = dates[1];
 
                   // Calculate the difference in months
                   const monthDifference = endDate.diff(startDate, "month");
 
+                  console.log("monthDifference: ", monthDifference);
+
+                  setFieldValue("dates", dates);
                   setFieldValue("nombre", monthDifference);
                 }}
+                value={values.dates}
                 allowClear
               />
+              <ErrorMessage name="dates">
+                {(msg) => <span style={{ color: "red" }}>{msg}</span>}
+              </ErrorMessage>
+              <Button
+                style={{ fontWeight: "600", float: "right", margin: "10px 0" }}
+                type="primary"
+                onClick={handleSubmit}
+                disabled={!isValid}
+                loading={isSubmitting}
+              >
+                <BadgePlus size={15} />
+                Add
+              </Button>
+              <div style={{ clear: "both" }}></div>
             </div>
           )}
         </Formik>
