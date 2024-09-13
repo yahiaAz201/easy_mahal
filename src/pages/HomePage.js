@@ -1011,7 +1011,11 @@ export default function HomePage() {
   const newClientsColumns = [
     {
       title: "Full Name",
-      render: (client) => `${client.fname} ${client.lname}`,
+      render: (client) => (
+        <span style={{ textTransform: "uppercase" }}>
+          {client.fname} {client.lname}
+        </span>
+      ),
     },
     Table.EXPAND_COLUMN,
     {
@@ -1088,9 +1092,6 @@ export default function HomePage() {
     {
       title: "Name",
       dataIndex: "name",
-      render: (name) => (
-        <span style={{ textTransform: "uppercase" }}>{name}</span>
-      ),
     },
     {
       title: "Amount",
