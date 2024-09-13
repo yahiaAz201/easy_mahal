@@ -13,6 +13,7 @@ import {
   message,
   Input,
   DatePicker,
+  Tooltip,
 } from "antd";
 import dayjs from "dayjs";
 
@@ -25,6 +26,8 @@ import {
   DiamondPlus,
   User,
   Package,
+  FileDown,
+  Download,
 } from "lucide-react";
 import * as Yup from "yup";
 
@@ -462,6 +465,8 @@ export default function HomePage() {
   const [clients, setClients] = useState([]);
   const [addNewClientModal, setAddNewClientModal] = useState(false);
   const [addNewPurchaseModal, setAddNewPurchaseModal] = useState(false);
+  const [selectedClients, setSelectedClients] = useState([]);
+  const [expandedRows, setExpandedRows] = useState([]);
 
   const [confirmModal, confirmModalContextHolder] = Modal.useModal();
 
@@ -479,6 +484,11 @@ export default function HomePage() {
     });
     setClients(newClients);
   }, []);
+
+  const handleOnExpand = (record) => () => {
+    if (!expandedRows.includes(record.key)) setExpandedRows([record.key]);
+    else setExpandedRows([]);
+  };
 
   const handleAddNewClient = async (clientData) => {
     const client = clientData;
@@ -516,7 +526,8 @@ export default function HomePage() {
       </span>
     );
   };
-  const handleAddPurchase = (client) => () => {
+  const handleAddPurchase = (client) => (e) => {
+    e?.stopPropagation();
     setTempClient(client);
     setAddNewPurchaseModal(true);
   };
@@ -1035,8 +1046,23 @@ export default function HomePage() {
     {
       title: "Orders",
       dataIndex: "orders",
-      render: (orders) => orders.length,
+      render: (orders, client) => (
+        <Flex align="center" justify="space-between">
+          <span style={{ fontWeight: 500 }}>{orders.length}</span>{" "}
+          <Tooltip title="Add New Purchase">
+            <Button
+              style={{ height: 25, width: 25, minWidth: "unset" }}
+              onClick={handleAddPurchase(client)}
+              type="primary"
+              shape="circle"
+              icon={<BadgePlus size={20} />}
+            />
+          </Tooltip>
+        </Flex>
+      ),
+      width: 100,
     },
+
     {
       title: "Created At",
       dataIndex: "createdAt",
@@ -1081,6 +1107,7 @@ export default function HomePage() {
             ],
           }}
           trigger={["click"]}
+          onClick={(e) => e.stopPropagation()}
         >
           <EllipsisVertical size={15} />
         </Dropdown>
@@ -1203,6 +1230,14 @@ export default function HomePage() {
           >
             New Client
           </Button>
+          <Tooltip title="Export">
+            <Button
+              type="default"
+              shape="circle"
+              icon={<Download size={18} />}
+              disabled={selectedClients?.length == 0}
+            />
+          </Tooltip>
         </div>
         <Divider className="control-newclients-divider" />
         <Table
@@ -1213,8 +1248,18 @@ export default function HomePage() {
           scroll={{
             y: pageHeight,
           }}
+          expandedRowKeys={expandedRows}
           expandable={{
             expandedRowRender: ExpandedRowRender,
+          }}
+          rowSelection={{
+            selectedRowKeys: selectedClients,
+            onChange: setSelectedClients,
+          }}
+          onRow={(...args) => {
+            return {
+              onClick: handleOnExpand(...args),
+            };
           }}
         />
 
