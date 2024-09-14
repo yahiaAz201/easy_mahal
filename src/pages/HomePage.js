@@ -928,8 +928,8 @@ export default function HomePage() {
           <div class="input-filed">
             <label for="nmbr">nomber</label>
             <div class="pin">
-              <input type="text" value="${order.nombre[0]}" />
-              <input type="text" value="${order.nombre[1]}" />
+              <input type="text" value="${order.nombre.toString()[0]}" />
+              <input type="text" value="${order.nombre.toString()[1]}" />
             </div>
           </div>
         </form>
@@ -1264,8 +1264,8 @@ export default function HomePage() {
           <div class="input-filed">
             <label for="nmbr">nomber</label>
             <div class="pin">
-              <input type="text" value="${order.nombre[0]}" />
-              <input type="text" value="${order.nombre[1]}" />
+              <input type="text" value="${order.nombre.toString()[0]}" />
+              <input type="text" value="${order.nombre.toString()[1]}" />
             </div>
           </div>
         </form>
