@@ -2,15 +2,16 @@
   background-color: #fff;
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 .page_login .form {
   width: 500px;
+  height: fit-content;
   padding: 20px 30px;
   border: 2px solid #f0f0f0;
   border-radius: 6px;
   color: rgba(0, 0, 0, 0.74);
+  margin-top: 10px;
 }
 
 .form h2.header {

@@ -1,7 +1,7 @@
 import "./SignupPage.css";
 import React, { useEffect, useState } from "react";
 
-import { Button, message, Flex, Select } from "antd";
+import { Button, message, Flex, Select, Input, Divider } from "antd";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
@@ -65,6 +65,10 @@ export default function SignupPage() {
           fname: "",
           lname: "",
           phone: "",
+          ccp: {
+            number: null,
+            key: null,
+          },
           state: "",
           city: "",
           email: "",
@@ -112,7 +116,7 @@ export default function SignupPage() {
                 touched={touched.lname}
                 error={errors.lname}
               />
-              <AppInputTextFeild
+              {/*  <AppInputTextFeild
                 style={{ marginRight: 5, flex: 1 }}
                 name="ccp"
                 label="CCP"
@@ -123,19 +127,35 @@ export default function SignupPage() {
                 status="secondary"
                 touched={touched.ccp}
                 error={errors.ccp}
+                /> */}
+              <AppInputTextFeild
+                name="phone"
+                label="Phone Number"
+                placeholder="0783773369"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.phone}
+                status="secondary"
+                touched={touched.phone}
+                error={errors.phone}
               />
             </Flex>
-            <AppInputTextFeild
-              name="phone"
-              label="Phone Number"
-              placeholder="0783773369"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.phone}
-              status="secondary"
-              touched={touched.phone}
-              error={errors.phone}
-            />
+            <Flex wrap="wrap">
+              <Flex
+                style={{
+                  flexDirection: "column",
+                  marginBottom: 20,
+                  marginRight: 30,
+                }}
+              >
+                <label style={{ fontWeight: 500, fontSize: 16 }}>CCP</label>
+                <Input.OTP length={10} onChange={console.log} />
+              </Flex>
+              <Flex style={{ flexDirection: "column", marginBottom: "10px" }}>
+                <label style={{ fontWeight: 500, fontSize: 16 }}>Key</label>
+                <Input.OTP length={2} />
+              </Flex>
+            </Flex>
             <Flex vertical={false} justify="space-between" align="flex-end">
               <Select
                 name="state"
@@ -185,7 +205,7 @@ export default function SignupPage() {
                 disabled={!values.state}
               />
             </Flex>
-
+            <Divider />
             <AppInputTextFeild
               name="email"
               label="Email"

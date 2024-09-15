@@ -37,6 +37,13 @@ import { ErrorMessage, Formik } from "formik";
 const pageHeight =
   window.document.documentElement.scrollHeight - (99 + 53 + 32);
 
+const CLIENTS_STATUS = {
+  0: { name: "Active", color: "#28A745" },
+  1: { name: "Warning ", color: "#C4E538	" },
+  2: { name: "Late", color: "#FFC107" },
+  5: { name: "Blocked", color: "#DC3545	" },
+};
+
 const USER = {
   ccp: {
     number: "0021006220",
@@ -48,7 +55,6 @@ const USER = {
 const NEW_CLIENTS = [
   {
     _id: "12a9b3f61e5d9e00c1f4b2a8",
-
     fname: "AZIZ",
     lname: "BOUCHAIR",
     ccp: {
@@ -57,13 +63,13 @@ const NEW_CLIENTS = [
     },
     phone: "0776543210",
     idn: "135792468013579695",
+    status: 0,
     createdAt: "2024-09-06T19:49:09.459Z",
-
     orders: [
       {
         _id: "1",
         name: "Iphone 15 Mini",
-        amount: 600_000,
+        amount: 6000,
         nombre: 7,
         dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: true,
@@ -71,7 +77,7 @@ const NEW_CLIENTS = [
       {
         _id: "2",
         name: "Laptop HP",
-        amount: 200_000,
+        amount: 2500,
         nombre: 12,
         dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: false,
@@ -79,7 +85,7 @@ const NEW_CLIENTS = [
       {
         _id: "3",
         name: "Samsung Fridge",
-        amount: 10_000,
+        amount: 9000,
         nombre: 15,
         dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
         isPaid: false,
@@ -87,340 +93,46 @@ const NEW_CLIENTS = [
     ],
   },
   {
-    _id: "23b1d6f82f9c1a00d3f6e2b7",
-
-    fname: "SARA",
-    lname: "BOUCHAREB",
+    _id: "25y6r3f61e5d9e00c1540fRt",
+    fname: "YAHIA",
+    lname: "BOUROUNI",
     ccp: {
-      number: "0021987654",
-      key: "34",
-    },
-    phone: "0698765432",
-    idn: "246813579024680695",
-    createdAt: "2024-09-06T19:50:12.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "Smartphone Samsung",
-        amount: 90_000,
-        nombre: 18,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
-  },
-  {
-    _id: "34e8f4b72c6f9d00e2c4d9f3",
-
-    fname: "MOHAMED",
-    lname: "BOURKA",
-    ccp: {
-      number: "0021098765",
-      key: "56",
-    },
-    phone: "0754321987",
-    idn: "159753468012345695",
-    createdAt: "2024-09-06T19:52:34.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "Tablet Lenovo",
-        amount: 150_000,
-        nombre: 30,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
-  },
-  {
-    _id: "45f2a3e91b8e2f00c3f5c1b4",
-
-    fname: "NOUR",
-    lname: "CHERIF",
-    ccp: {
-      number: "0021321654",
-      key: "23",
-    },
-    phone: "0785432190",
-    idn: "123456789012345695",
-    createdAt: "2024-09-06T19:54:10.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "Gaming PC",
-        amount: 300_000,
-        nombre: 20,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
-  },
-  {
-    _id: "56g7d5h84c9d7f00d4g8e7c5",
-
-    fname: "SOUAD",
-    lname: "LAMDANI",
-    ccp: {
-      number: "0021987432",
-      key: "19",
-    },
-    phone: "0665432198",
-    idn: "135468024135791695",
-    createdAt: "2024-09-06T19:55:20.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "Washing Machine LG",
-        amount: 180_000,
-        nombre: 25,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
-  },
-  {
-    _id: "67h9j6k95f1e8g00e5h9f8d6",
-
-    fname: "AHMED",
-    lname: "DJEBBOUR",
-    ccp: {
-      number: "0021123456",
-      key: "45",
-    },
-    phone: "0776543212",
-    idn: "987654321012345695",
-    createdAt: "2024-09-06T19:57:34.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "Fridge Beko",
-        amount: 220_000,
-        nombre: 12,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
-  },
-  {
-    _id: "78i2l7m96g2f9h00f6i1g9e7",
-
-    fname: "NADIA",
-    lname: "KACI",
-    ccp: {
-      number: "0021765432",
-      key: "67",
-    },
-    phone: "0654321987",
-    idn: "123456789987654695",
-    createdAt: "2024-09-06T19:58:10.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "Microwave Panasonic",
-        amount: 95_000,
-        nombre: 40,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
-  },
-  {
-    _id: "89j3n8o97h3g0i00g7j2h0f8",
-
-    fname: "KARIM",
-    lname: "BENMANSOUR",
-    ccp: {
-      number: "0021876543",
-      key: "78",
-    },
-    phone: "0786543219",
-    idn: "159753246801357695",
-    createdAt: "2024-09-06T19:59:12.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "Camera Canon",
-        amount: 175_000,
-        nombre: 35,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
-  },
-  {
-    _id: "90k4o9p98i4h1j00h8k3i1g9",
-
-    fname: "LINA",
-    lname: "SAID",
-    ccp: {
-      number: "0021098765",
-      key: "21",
-    },
-    phone: "0676543218",
-    idn: "246813579013579695",
-    createdAt: "2024-09-06T20:00:15.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "Smartwatch Apple",
-        amount: 150_000,
-        nombre: 22,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
-  },
-  {
-    _id: "12a5p0q99j5i2k00i9l4j2h0",
-
-    fname: "SAMIR",
-    lname: "OUALI",
-    ccp: {
-      number: "0021321456",
-      key: "32",
-    },
-    phone: "0775432109",
-    idn: "135792468013579695",
-    createdAt: "2024-09-06T20:01:18.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "Gaming Console PS5",
-        amount: 120_000,
-        nombre: 24,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
-  },
-  {
-    _id: "13b6q1r00k6j3l00j0m5k3i1",
-
-    fname: "YASMINA",
-    lname: "KHERBOUCHE",
-    ccp: {
-      number: "0021546789",
-      key: "43",
-    },
-    phone: "0674321098",
-    idn: "987654321012345695",
-    createdAt: "2024-09-06T20:02:22.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "Washing Machine Samsung",
-        amount: 130_000,
-        nombre: 36,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
-  },
-  {
-    _id: "14c7r2s11l7k4m00k1n6l4j2",
-
-    fname: "HASSAN",
-    lname: "BOUALI",
-    ccp: {
-      number: "0021674321",
-      key: "54",
-    },
-    phone: "0783210987",
-    idn: "123456789012345695",
-    createdAt: "2024-09-06T20:03:25.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "TV Sony",
-        amount: 190_000,
-        nombre: 45,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
-  },
-  {
-    _id: "15d8s3t22m8l5n00l2o7m5k3",
-
-    fname: "SAMIRA",
-    lname: "DJELLOULI",
-    ccp: {
-      number: "0021876543",
-      key: "65",
-    },
-    phone: "0665432109",
-    idn: "135468024135791695",
-    createdAt: "2024-09-06T20:04:28.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "Fridge Samsung",
-        amount: 220_000,
-        nombre: 20,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
-  },
-  {
-    _id: "16e9t4u33n9m6o00m3p8n6l4",
-
-    fname: "FATIMA",
-    lname: "HAMADI",
-    ccp: {
-      number: "0021234567",
-      key: "76",
-    },
-    phone: "0653210987",
-    idn: "159753468013579695",
-    createdAt: "2024-09-06T20:05:31.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "Dishwasher Bosch",
-        amount: 145_000,
-        nombre: 22,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
-  },
-  {
-    _id: "17f0u5v44o0n7p00n4q9o7m5",
-
-    fname: "RACHID",
-    lname: "SAOUDI",
-    ccp: {
-      number: "0021765432",
-      key: "89",
+      number: "0021456789",
+      key: "12",
     },
     phone: "0776543210",
-    idn: "987654321098765695",
-    createdAt: "2024-09-06T20:06:34.459Z",
-
-    orders: [
-      {
-        _id: "1",
-        name: "Microwave LG",
-        amount: 95_000,
-        nombre: 40,
-        dates: ["2024-09-06T19:49:09.459Z", "2025-02-06T19:49:09.459Z"],
-        isPaid: true,
-      },
-    ],
+    idn: "135792468013579695",
+    status: 1,
+    createdAt: "2024-09-06T19:49:09.459Z",
+    orders: [],
+  },
+  {
+    _id: "25y6r3f61540fRt1e5d9e00c",
+    fname: "AMINE",
+    lname: "BOUSMINA",
+    ccp: {
+      number: "0021456789",
+      key: "12",
+    },
+    phone: "0776543210",
+    idn: "135792468013579695",
+    status: 2,
+    createdAt: "2024-09-06T19:49:09.459Z",
+    orders: [],
+  },
+  {
+    _id: "6154t25y6r3f0fR1e9e05d0c",
+    fname: "JHON",
+    lname: "DOE",
+    ccp: {
+      number: "0021456789",
+      key: "12",
+    },
+    phone: "0776543210",
+    idn: "135792468013579695",
+    status: 5,
+    createdAt: "2024-09-06T19:49:09.459Z",
+    orders: [],
   },
 ];
 
@@ -503,6 +215,7 @@ export default function HomePage() {
 
     client["key"] = "415qs6d465sq4d" + Math.random() * 10000;
     client["createdAt"] = new Date().toISOString();
+    client["status"] = 0;
     client["orders"] = [];
 
     setClients([client, ...clients]);
@@ -615,6 +328,8 @@ export default function HomePage() {
     const eDay = String(endtDate.getDate()).padStart(2, "0"); // Day
     const eMonth = String(endtDate.getMonth() + 1).padStart(2, "0"); // Month (getMonth() returns 0-11, so +1)
     const eYear = endtDate.getFullYear();
+
+    const nombre = String(order.nombre).padStart(2, "0");
 
     const data = `   <div class="page">
       <article>
@@ -928,8 +643,8 @@ export default function HomePage() {
           <div class="input-filed">
             <label for="nmbr">nomber</label>
             <div class="pin">
-              <input type="text" value="${order.nombre.toString()[0]}" />
-              <input type="text" value="${order.nombre.toString()[1]}" />
+              <input type="text" value="${nombre.toString()[0]}" />
+              <input type="text" value="${nombre.toString()[1]}" />
             </div>
           </div>
         </form>
@@ -1264,8 +979,8 @@ export default function HomePage() {
           <div class="input-filed">
             <label for="nmbr">nomber</label>
             <div class="pin">
-              <input type="text" value="${order.nombre.toString()[0]}" />
-              <input type="text" value="${order.nombre.toString()[1]}" />
+              <input type="text" value="${nombre.toString()[0]}" />
+              <input type="text" value="${nombre.toString()[1]}" />
             </div>
           </div>
         </form>
@@ -1498,7 +1213,25 @@ export default function HomePage() {
     iframe.contentWindow.print();
   };
 
+  const handleExport = () => {
+    console.log("selectedClients: ", selectedClients);
+    setSelectedClients([]);
+  };
+
+  const ExpandedRowRender = ({ orders, ...client }) => {
+    return (
+      <Table
+        style={{ margin: "10px 0" }}
+        columns={ordersColumns(client)}
+        dataSource={orders}
+        pagination={false}
+        size="small"
+      />
+    );
+  };
+
   const newClientsColumns = [
+    Table.EXPAND_COLUMN,
     {
       title: "Full Name",
       render: (client) => (
@@ -1507,7 +1240,18 @@ export default function HomePage() {
         </span>
       ),
     },
-    Table.EXPAND_COLUMN,
+    {
+      title: "Status",
+      dataIndex: "status",
+      width: 100,
+      render: (status) => (
+        <Badge
+          status="processing"
+          color={CLIENTS_STATUS[status].color}
+          text={CLIENTS_STATUS[status].name}
+        />
+      ),
+    },
     {
       title: "Phone N°",
       dataIndex: "phone",
@@ -1685,18 +1429,6 @@ export default function HomePage() {
     },
   ];
 
-  const ExpandedRowRender = ({ orders, ...client }) => {
-    return (
-      <Table
-        style={{ margin: "10px 0" }}
-        columns={ordersColumns(client)}
-        dataSource={orders}
-        pagination={false}
-        size="small"
-      />
-    );
-  };
-
   return (
     <>
       <div className="page page_home">
@@ -1714,6 +1446,7 @@ export default function HomePage() {
               type="default"
               shape="circle"
               icon={<Download size={18} />}
+              onClick={handleExport}
               disabled={selectedClients?.length == 0}
             />
           </Tooltip>
