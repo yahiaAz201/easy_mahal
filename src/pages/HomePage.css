@@ -5,6 +5,7 @@
 .page_home .control {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .page_home .control button {

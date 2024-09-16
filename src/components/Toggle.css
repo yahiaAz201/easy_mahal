@@ -1,0 +1,29 @@
+.btn-toggle {
+  padding: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 4px;
+  color: #000000fa;
+}
+
+.btn-toggle.active {
+  color: hsl(0 0% 98%);
+  background-color: hsl(240 3.7% 15.9%);
+}
+
+.btn-toggle:hover {
+  color: hsl(0 0% 98%);
+  background: hsl(240deg 1.28% 36.99%);
+}
+
+.btn-toggle.active:hover {
+  color: hsl(240 5% 64.9%);
+  background: hsl(240 3.7% 15.9%);
+}
+
+.btn-toggle:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
