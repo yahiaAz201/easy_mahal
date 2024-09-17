@@ -26,9 +26,9 @@ import {
   DiamondPlus,
   User,
   Package,
-  FileDown,
   Download,
   MousePointer2,
+  UserPen,
 } from "lucide-react";
 import * as Yup from "yup";
 
@@ -67,7 +67,7 @@ const NEW_CLIENTS = [
     phone: "0776543210",
     status: 2,
     idn: "135792468013579695",
-    createdAt: "2024-09-06T19:49:09.459Z",
+    createdAt: "2025-09-06T19:49:09.459Z",
 
     orders: [
       {
@@ -98,7 +98,6 @@ const NEW_CLIENTS = [
   },
   {
     _id: "23b1d6f82f9c1a00d3f6e2b7",
-
     fname: "SARA",
     lname: "BOUCHAREB",
     ccp: {
@@ -108,7 +107,7 @@ const NEW_CLIENTS = [
     phone: "0698765432",
     status: 2,
     idn: "246813579024680695",
-    createdAt: "2024-09-06T19:50:12.459Z",
+    createdAt: "2023-09-06T19:50:12.459Z",
 
     orders: [
       {
@@ -495,11 +494,15 @@ const orderValidationSchema = Yup.object({
 
 export default function HomePage() {
   const [clients, setClients] = useState([]);
-  const [addNewClientModal, setAddNewClientModal] = useState(false);
-  const [addNewPurchaseModal, setAddNewPurchaseModal] = useState(false);
   const [selectedClients, setSelectedClients] = useState([]);
   const [expandedRows, setExpandedRows] = useState([]);
   const [isSelectEnabled, setIsSelectEnabled] = useState(false);
+
+  const [clientModal, setClientModal] = useState(false);
+  const [addNewPurchaseModal, setAddNewPurchaseModal] = useState(false);
+
+  const [clientModalOp, setClientModalOp] = useState("add");
+  const [purchaseModalOp, setPurchaseModalOp] = useState("add");
 
   const [confirmModal, confirmModalContextHolder] = Modal.useModal();
 
@@ -507,11 +510,12 @@ export default function HomePage() {
 
   const [tempClient, setTempClient] = useState(null);
 
-  const handleOnAddNewClientModalOpen = () => setAddNewClientModal(true);
-  const handleOnAddNewClientModalCancel = () => setAddNewClientModal(false);
-
   useEffect(() => {
     const newClients = NEW_CLIENTS.map((client) => {
+      client["orders"] = client.orders.map((order) => {
+        order["key"] = order["_id"];
+        return order;
+      });
       client["key"] = client["_id"];
       return client;
     });
@@ -522,10 +526,21 @@ export default function HomePage() {
     if (!isSelectEnabled) setSelectedClients([]);
   }, [isSelectEnabled]);
 
+  useEffect(() => {
+    if (!clientModal) {
+      setTempClient(null);
+      setClientModalOp("add");
+    }
+  }, [clientModal]);
+
   const handleOnExpand = (record) => () => {
     if (!expandedRows.includes(record.key)) setExpandedRows([record.key]);
     else setExpandedRows([]);
   };
+
+  const handleOnAddNewClientModalOpen = () => setClientModal(true);
+
+  const handleOnAddNewClientModalCancel = () => setClientModal(false);
 
   const handleAddNewClient = async (clientData) => {
     const client = clientData;
@@ -536,17 +551,29 @@ export default function HomePage() {
     client["orders"] = [];
 
     setClients([client, ...clients]);
-    setAddNewClientModal(false);
+    setClientModal(false);
     message.success("New Client Added Successfully");
   };
 
-  const handleEditClient = (client) => (e) => {
-    e.stopPropagation();
+  const openEditClientModal = (client) => {
     setTempClient(client);
+    setClientModal(true);
+    setClientModalOp("edit");
   };
 
-  const handleDeleteClient = (_client) => async (e) => {
-    e.stopPropagation();
+  const handleEditClient = async (client, { setSubmitting }) => {
+    console.log("client: ", client);
+
+    await new Promise((resolve) =>
+      setTimeout(() => {
+        resolve();
+      }, 5000)
+    );
+    setSubmitting(false);
+    setClientModal(false);
+  };
+
+  const handleDeleteClient = async (_client) => {
     const confirmed = await confirmModal.confirm({
       title: "Delete",
       content: "Are you sure you wanna delete this !",
@@ -569,15 +596,13 @@ export default function HomePage() {
     );
   };
 
-  const handleAddPurchase = (client) => (e) => {
-    e?.stopPropagation();
+  const handleAddPurchase = (client) => {
     setTempClient(client);
     setAddNewPurchaseModal(true);
   };
 
   const handleCancelNewPurchase = () => {
     setAddNewPurchaseModal(false);
-    setTempClient(null);
   };
 
   const handleSubmitNewPurchase = async (purchase) => {
@@ -1560,6 +1585,12 @@ export default function HomePage() {
           <Badge count={selectedClients.length} />
         </>
       ),
+      filters: clients.map((client) => ({
+        text: `${client.fname} ${client.lname}`,
+        value: client.key,
+      })),
+      filterSearch: true,
+      onFilter: (value, record) => record.key == value,
       render: (client) => (
         <span style={{ textTransform: "uppercase" }}>
           {client.fname} {client.lname}
@@ -1601,7 +1632,7 @@ export default function HomePage() {
           <Tooltip title="Add New Purchase">
             <Button
               style={{ height: 25, width: 25, minWidth: "unset" }}
-              onClick={handleAddPurchase(client)}
+              onClick={() => handleAddPurchase(client)}
               type="primary"
               shape="circle"
               icon={<BadgePlus size={20} />}
@@ -1615,10 +1646,14 @@ export default function HomePage() {
     {
       title: "Created At",
       dataIndex: "createdAt",
-      render: (createdAt) => <Tag>{new Date(createdAt).toLocaleString()}</Tag>,
+      sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+      render: (createdAt) => (
+        <Tag color="#711DB0">{new Date(createdAt).toLocaleString()}</Tag>
+      ),
     },
     {
-      align: "right",
+      align: "center",
+      width: 50,
       render: (client) => (
         <Dropdown
           menu={{
@@ -1626,7 +1661,10 @@ export default function HomePage() {
               {
                 key: "edit",
                 label: (
-                  <Flex align="center" onClick={handleEditClient(client)}>
+                  <Flex
+                    align="center"
+                    onClick={() => openEditClientModal(client)}
+                  >
                     <Cog size={15} style={{ marginRight: 5 }} />
                     <span>Edit</span>
                   </Flex>
@@ -1635,7 +1673,10 @@ export default function HomePage() {
               {
                 key: "remove",
                 label: (
-                  <Flex align="center" onClick={handleDeleteClient(client)}>
+                  <Flex
+                    align="center"
+                    onClick={() => handleDeleteClient(client)}
+                  >
                     <BadgeX size={15} style={{ marginRight: 5 }} />
                     <span>Remove</span>
                   </Flex>
@@ -1647,7 +1688,10 @@ export default function HomePage() {
               {
                 key: "addPurchase",
                 label: (
-                  <Flex align="center" onClick={handleAddPurchase(client)}>
+                  <Flex
+                    align="center"
+                    onClick={() => handleAddPurchase(client)}
+                  >
                     <DiamondPlus size={15} style={{ marginRight: 5 }} />
                     <span>Purchase</span>
                   </Flex>
@@ -1755,6 +1799,40 @@ export default function HomePage() {
     },
   ];
 
+  const clientModalDetails = {
+    add: {
+      title: (
+        <Flex align="center">
+          <User size={18} style={{ marginRight: 2 }} />
+          Add New Client
+        </Flex>
+      ),
+      submitBtnText: "Create",
+      initialValues: {
+        fname: "",
+        lname: "",
+        idn: null,
+        phone: "",
+        ccp: {
+          number: null,
+          key: null,
+        },
+      },
+      onSubmit: handleAddNewClient,
+    },
+    edit: {
+      title: (
+        <Flex align="center">
+          <UserPen size={18} style={{ marginRight: 2 }} />
+          Edit Client
+        </Flex>
+      ),
+      submitBtnText: "Edit",
+      initialValues: tempClient,
+      onSubmit: handleEditClient,
+    },
+  };
+
   return (
     <>
       <div className="page page_home">
@@ -1825,31 +1903,17 @@ export default function HomePage() {
       </div>
 
       <Modal
-        title={
-          <Flex align="center">
-            <User size={18} style={{ marginRight: 2 }} />
-            Add New Client
-          </Flex>
-        }
-        open={addNewClientModal}
+        title={clientModalDetails[clientModalOp].title}
+        open={clientModal}
         onCancel={handleOnAddNewClientModalCancel}
         onOk={handleAddNewClient}
         destroyOnClose={true}
         footer={false}
       >
         <Formik
-          initialValues={{
-            fname: "",
-            lname: "",
-            idn: null,
-            phone: "",
-            ccp: {
-              number: null,
-              key: null,
-            },
-          }}
+          initialValues={clientModalDetails[clientModalOp].initialValues}
           validationSchema={userValidationSchema}
-          onSubmit={handleAddNewClient}
+          onSubmit={clientModalDetails[clientModalOp].onSubmit}
         >
           {({
             values,
@@ -1951,7 +2015,7 @@ export default function HomePage() {
                 disabled={!isValid}
                 loading={isSubmitting}
               >
-                Create
+                {clientModalDetails[clientModalOp].submitBtnText}
               </Button>
               <div style={{ clear: "both" }}></div>
             </>
