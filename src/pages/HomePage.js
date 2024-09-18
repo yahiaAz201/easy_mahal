@@ -509,6 +509,7 @@ export default function HomePage() {
   const iframeRef = useRef(null);
 
   const [tempClient, setTempClient] = useState(null);
+  const [tempPurchase, setTempPurchase] = useState(null);
 
   useEffect(() => {
     const newClients = NEW_CLIENTS.map((client) => {
@@ -555,22 +556,23 @@ export default function HomePage() {
     message.success("New Client Added Successfully");
   };
 
-  const openEditClientModal = (client) => {
+  const openEditClientModal = (client) => (event) => {
     setTempClient(client);
     setClientModal(true);
     setClientModalOp("edit");
   };
 
-  const handleEditClient = async (client, { setSubmitting }) => {
-    console.log("client: ", client);
-
-    await new Promise((resolve) =>
-      setTimeout(() => {
-        resolve();
-      }, 5000)
+  const handleEditClient = async (_client, { setSubmitting }) => {
+    const new_clients = [...clients];
+    const client_index = new_clients.findIndex(
+      (client) => client._id == _client._id
     );
+    if (client_index == -1) return;
+    new_clients[client_index] = _client;
+    setClients(new_clients);
     setSubmitting(false);
     setClientModal(false);
+    message.success("Changes have been applied and saved successfully");
   };
 
   const handleDeleteClient = async (_client) => {
@@ -631,8 +633,11 @@ export default function HomePage() {
     message.success("New Purchase Added Successfully");
   };
 
-  const handleEditOrder = (order, client) => () => {
+  const handleOpenEditPurchaseModal = (order, client) => () => {
     console.log("Edit Order", order._id, client._id);
+    setTempPurchase(order);
+    setPurchaseModalOp("edit");
+    setAddNewPurchaseModal(true);
   };
 
   const handleDeleteOrder = (_order, _client) => async () => {
@@ -1601,6 +1606,13 @@ export default function HomePage() {
       title: "Status",
       dataIndex: "status",
       width: 100,
+      filters: Object.entries(CLIENTS_STATUS).map(([key, status]) => ({
+        value: key,
+        text: (
+          <Badge status="processing" color={status.color} text={status.name} />
+        ),
+      })),
+      onFilter: (value, record) => record.status == value,
       render: (status) => (
         <Badge
           status="processing"
@@ -1661,10 +1673,7 @@ export default function HomePage() {
               {
                 key: "edit",
                 label: (
-                  <Flex
-                    align="center"
-                    onClick={() => openEditClientModal(client)}
-                  >
+                  <Flex align="center" onClick={openEditClientModal(client)}>
                     <Cog size={15} style={{ marginRight: 5 }} />
                     <span>Edit</span>
                   </Flex>
@@ -1754,7 +1763,7 @@ export default function HomePage() {
                   label: (
                     <Flex
                       align="center"
-                      onClick={handleEditOrder(order, client)}
+                      onClick={handleOpenEditPurchaseModal(order, client)}
                     >
                       <Cog size={15} style={{ marginRight: 5 }} />
                       <span>Edit</span>
@@ -1830,6 +1839,36 @@ export default function HomePage() {
       submitBtnText: "Edit",
       initialValues: tempClient,
       onSubmit: handleEditClient,
+    },
+  };
+
+  const purchaseModalDetails = {
+    add: {
+      title: (
+        <Flex align="center">
+          <Package size={18} style={{ marginRight: 2 }} />
+          Add New Purchase
+        </Flex>
+      ),
+      submitBtnText: "Create",
+      initialValues: {
+        name: "",
+        amount: null,
+        nombre: 3,
+        dates: [dayjs(), null],
+      },
+      onSubmit: () => console.log("submit"),
+    },
+    edit: {
+      title: (
+        <Flex align="center">
+          <UserPen size={18} style={{ marginRight: 2 }} />
+          Edit Purchase
+        </Flex>
+      ),
+      submitBtnText: "Edit",
+      initialValues: tempPurchase,
+      onSubmit: () => console.log("edit"),
     },
   };
 
@@ -2023,26 +2062,16 @@ export default function HomePage() {
         </Formik>
       </Modal>
       <Modal
-        title={
-          <Flex align="center">
-            <Package size={18} style={{ marginRight: 2 }} />
-            Add New Purchase
-          </Flex>
-        }
+        title={purchaseModalDetails[purchaseModalOp].title}
         open={addNewPurchaseModal}
         onCancel={handleCancelNewPurchase}
         destroyOnClose={true}
         footer={false}
       >
         <Formik
-          initialValues={{
-            name: "",
-            amount: null,
-            nombre: 3,
-            dates: [dayjs(), null],
-          }}
+          initialValues={purchaseModalDetails[purchaseModalOp].initialValues}
           validationSchema={orderValidationSchema}
-          onSubmit={handleSubmitNewPurchase}
+          onSubmit={purchaseModalDetails[purchaseModalOp].onSubmit}
         >
           {({
             values,
@@ -2054,6 +2083,9 @@ export default function HomePage() {
             isValid,
           }) => (
             <div className="purchase-form">
+              {JSON.stringify(
+                purchaseModalDetails[purchaseModalOp]?.initialValues
+              )}
               <label>Name</label>
               <Input
                 name="name"
@@ -2137,7 +2169,7 @@ export default function HomePage() {
                 loading={isSubmitting}
               >
                 <BadgePlus size={15} />
-                Add
+                {purchaseModalDetails[purchaseModalOp].submitBtnText}
               </Button>
               <div style={{ clear: "both" }}></div>
             </div>
