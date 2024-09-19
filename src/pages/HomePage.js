@@ -606,8 +606,8 @@ export default function HomePage() {
     );
   };
 
-  const handleAddPurchase = (client) => {
-    setTempClient_id(client._id);
+  const handleAddPurchase = (client_id) => {
+    setTempClient_id(client_id);
     setPurchaseModal(true);
   };
 
