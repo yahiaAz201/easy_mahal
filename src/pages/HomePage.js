@@ -499,7 +499,7 @@ export default function HomePage() {
   const [isSelectEnabled, setIsSelectEnabled] = useState(false);
 
   const [clientModal, setClientModal] = useState(false);
-  const [addNewPurchaseModal, setAddNewPurchaseModal] = useState(false);
+  const [purchaseModal, setPurchaseModal] = useState(false);
 
   const [clientModalOp, setClientModalOp] = useState("add");
   const [purchaseModalOp, setPurchaseModalOp] = useState("add");
@@ -508,7 +508,7 @@ export default function HomePage() {
 
   const iframeRef = useRef(null);
 
-  const [tempClient, setTempClient] = useState(null);
+  const [tempClient_id, setTempClient_id] = useState(null);
   const [tempPurchase, setTempPurchase] = useState(null);
 
   useEffect(() => {
@@ -529,10 +529,18 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!clientModal) {
-      setTempClient(null);
+      setTempClient_id(null);
       setClientModalOp("add");
     }
   }, [clientModal]);
+
+  useEffect(() => {
+    if (!purchaseModal) {
+      setTempPurchase(null);
+      setTempClient_id(null);
+      setPurchaseModalOp("add");
+    }
+  }, [purchaseModal]);
 
   const handleOnExpand = (record) => () => {
     if (!expandedRows.includes(record.key)) setExpandedRows([record.key]);
@@ -556,8 +564,8 @@ export default function HomePage() {
     message.success("New Client Added Successfully");
   };
 
-  const openEditClientModal = (client) => (event) => {
-    setTempClient(client);
+  const openEditClientModal = (client_id) => (event) => {
+    setTempClient_id(client_id);
     setClientModal(true);
     setClientModalOp("edit");
   };
@@ -599,45 +607,73 @@ export default function HomePage() {
   };
 
   const handleAddPurchase = (client) => {
-    setTempClient(client);
-    setAddNewPurchaseModal(true);
+    setTempClient_id(client._id);
+    setPurchaseModal(true);
   };
 
   const handleCancelNewPurchase = () => {
-    setAddNewPurchaseModal(false);
+    setPurchaseModal(false);
   };
 
   const handleSubmitNewPurchase = async (purchase) => {
-    const newPurchase = { ...purchase };
-    const newDates = [...newPurchase.dates];
-    const [startDate, endDate] = newDates;
-    newDates[0] = startDate.toISOString();
-    newDates[1] = endDate.toISOString();
-    newPurchase["_id"] = "qs1d321qsd5" + Math.random() * 1000000;
-    newPurchase["dates"] = newDates;
-    newPurchase["isPaid"] = false;
+    try {
+      const newPurchase = { ...purchase };
+      const newDates = [...newPurchase.dates];
+      const [startDate, endDate] = newDates;
+      newDates[0] = startDate.toISOString();
+      newDates[1] = endDate.toISOString();
+      newPurchase["_id"] = "qs1d321qsd5" + Math.random() * 1000000;
+      newPurchase["dates"] = newDates;
+      newPurchase["isPaid"] = false;
 
-    console.log("client: ", tempClient);
-    console.log("purchase: ", newPurchase);
+      console.log("client: ", tempClient_id);
+      console.log("purchase: ", newPurchase);
 
-    const client_index = clients.findIndex(
-      (client) => client._id == tempClient._id
-    );
-    if (client_index == -1) return;
-    const new_clients = [...clients];
-    const orders = new_clients[client_index].orders;
-    new_clients[client_index].orders = [newPurchase, ...orders];
-    setClients(new_clients);
-    setAddNewPurchaseModal(false);
-    setTempClient(null);
-    message.success("New Purchase Added Successfully");
+      const client_index = clients.findIndex(
+        (client) => client._id == tempClient_id
+      );
+      if (client_index == -1) return;
+      const new_clients = [...clients];
+      const orders = new_clients[client_index].orders;
+      new_clients[client_index].orders = [newPurchase, ...orders];
+      setClients(new_clients);
+      setPurchaseModal(false);
+      setTempClient_id(null);
+      message.success("New Purchase Added Successfully");
+    } catch (error) {
+      message.error(error.message);
+    }
   };
 
   const handleOpenEditPurchaseModal = (order, client) => () => {
-    console.log("Edit Order", order._id, client._id);
+    setTempClient_id(client._id);
     setTempPurchase(order);
     setPurchaseModalOp("edit");
-    setAddNewPurchaseModal(true);
+    setPurchaseModal(true);
+  };
+
+  const handleEditPurchase = (_order, { setSubmitting }) => {
+    console.log(tempClient_id, _order);
+    try {
+      const new_clients = [...clients];
+      const client_index = clients.findIndex(
+        (client) => client._id == tempClient_id
+      );
+      console.log("client_index: ", client_index);
+      if (client_index == -1) return;
+      const purchase_index = new_clients[client_index].orders.findIndex(
+        (order) => order._id == _order._id
+      );
+      console.log("purchase_index: ", purchase_index);
+      if (purchase_index == -1) return;
+      new_clients[client_index].orders[purchase_index] = _order;
+      setClients(new_clients);
+      setSubmitting(false);
+      setPurchaseModal(false);
+      message.success("Changes have been applied and saved successfully");
+    } catch (error) {
+      message.error(error.message);
+    }
   };
 
   const handleDeleteOrder = (_order, _client) => async () => {
@@ -1644,7 +1680,7 @@ export default function HomePage() {
           <Tooltip title="Add New Purchase">
             <Button
               style={{ height: 25, width: 25, minWidth: "unset" }}
-              onClick={() => handleAddPurchase(client)}
+              onClick={() => handleAddPurchase(client._id)}
               type="primary"
               shape="circle"
               icon={<BadgePlus size={20} />}
@@ -1673,7 +1709,10 @@ export default function HomePage() {
               {
                 key: "edit",
                 label: (
-                  <Flex align="center" onClick={openEditClientModal(client)}>
+                  <Flex
+                    align="center"
+                    onClick={openEditClientModal(client._id)}
+                  >
                     <Cog size={15} style={{ marginRight: 5 }} />
                     <span>Edit</span>
                   </Flex>
@@ -1837,7 +1876,7 @@ export default function HomePage() {
         </Flex>
       ),
       submitBtnText: "Edit",
-      initialValues: tempClient,
+      initialValues: clients.find((client) => client._id == tempClient_id),
       onSubmit: handleEditClient,
     },
   };
@@ -1857,7 +1896,7 @@ export default function HomePage() {
         nombre: 3,
         dates: [dayjs(), null],
       },
-      onSubmit: () => console.log("submit"),
+      onSubmit: handleSubmitNewPurchase,
     },
     edit: {
       title: (
@@ -1867,8 +1906,14 @@ export default function HomePage() {
         </Flex>
       ),
       submitBtnText: "Edit",
-      initialValues: tempPurchase,
-      onSubmit: () => console.log("edit"),
+      initialValues: {
+        _id: tempPurchase?._id,
+        name: tempPurchase?.name,
+        amount: tempPurchase?.amount,
+        nombre: tempPurchase?.nombre,
+        dates: [dayjs(tempPurchase?.dates[0]), dayjs(tempPurchase?.dates[1])],
+      },
+      onSubmit: handleEditPurchase,
     },
   };
 
@@ -2004,7 +2049,7 @@ export default function HomePage() {
                   status="secondary"
                   touched={touched.ccp?.number}
                   error={errors.ccp?.number}
-                  maxlength="10"
+                  maxLength="10"
                 />
                 <AppInputTextFeild
                   style={{ marginRight: 5, flex: 0.3 }}
@@ -2017,7 +2062,7 @@ export default function HomePage() {
                   status="secondary"
                   touched={touched.ccp?.key}
                   error={errors.ccp?.key}
-                  maxlength="2"
+                  maxLength="2"
                 />
               </Flex>
               <Flex wrap="wrap" align="flex-end">
@@ -2032,7 +2077,7 @@ export default function HomePage() {
                   status="primary"
                   touched={touched.idn}
                   error={errors.idn}
-                  maxlength="18"
+                  maxLength="18"
                 />
                 <AppInputTextFeild
                   style={{ marginRight: 5, marginRight: 5, flex: 0.4 }}
@@ -2063,7 +2108,7 @@ export default function HomePage() {
       </Modal>
       <Modal
         title={purchaseModalDetails[purchaseModalOp].title}
-        open={addNewPurchaseModal}
+        open={purchaseModal}
         onCancel={handleCancelNewPurchase}
         destroyOnClose={true}
         footer={false}
@@ -2083,9 +2128,6 @@ export default function HomePage() {
             isValid,
           }) => (
             <div className="purchase-form">
-              {JSON.stringify(
-                purchaseModalDetails[purchaseModalOp]?.initialValues
-              )}
               <label>Name</label>
               <Input
                 name="name"
