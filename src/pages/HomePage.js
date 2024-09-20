@@ -14,6 +14,7 @@ import {
   Input,
   DatePicker,
   Tooltip,
+  Switch,
 } from "antd";
 import dayjs from "dayjs";
 
@@ -520,7 +521,7 @@ export default function HomePage() {
       client["key"] = client["_id"];
       return client;
     });
-    setClients(newClients);
+    setClients([]);
   }, []);
 
   useEffect(() => {
@@ -565,6 +566,7 @@ export default function HomePage() {
   };
 
   const openEditClientModal = (client_id) => (event) => {
+    // event.stopPropagation();
     setTempClient_id(client_id);
     setClientModal(true);
     setClientModalOp("edit");
@@ -575,7 +577,10 @@ export default function HomePage() {
     const client_index = new_clients.findIndex(
       (client) => client._id == _client._id
     );
-    if (client_index == -1) return;
+    if (client_index == -1) {
+      setClientModal(false);
+      return message.error("No client was found");
+    }
     new_clients[client_index] = _client;
     setClients(new_clients);
     setSubmitting(false);
@@ -1633,7 +1638,7 @@ export default function HomePage() {
       filterSearch: true,
       onFilter: (value, record) => record.key == value,
       render: (client) => (
-        <span style={{ textTransform: "uppercase" }}>
+        <span style={{ textTransform: "uppercase", fontWeight: 600 }}>
           {client.fname} {client.lname}
         </span>
       ),
@@ -1738,7 +1743,7 @@ export default function HomePage() {
                 label: (
                   <Flex
                     align="center"
-                    onClick={() => handleAddPurchase(client)}
+                    onClick={() => handleAddPurchase(client._id)}
                   >
                     <DiamondPlus size={15} style={{ marginRight: 5 }} />
                     <span>Purchase</span>
@@ -1894,7 +1899,7 @@ export default function HomePage() {
         name: "",
         amount: null,
         nombre: 3,
-        dates: [dayjs(), null],
+        dates: [dayjs(), dayjs().add(2, "month")],
       },
       onSubmit: handleSubmitNewPurchase,
     },
@@ -1921,6 +1926,19 @@ export default function HomePage() {
     <>
       <div className="page page_home">
         <div className="control">
+          <div
+            style={{
+              justifySelf: "flex-start",
+            }}
+          >
+            <Input.Search
+              placeholder="input search text"
+              style={{
+                width: 200,
+              }}
+            />
+          </div>
+
           <Button
             type="primary"
             shape="round"
@@ -1938,7 +1956,6 @@ export default function HomePage() {
               disabled={selectedClients?.length == 0}
             />
           </Tooltip>
-
           <Toggle
             style={{ borderRadius: "50%", height: 30, width: 30 }}
             children={<MousePointer2 size={18} />}
@@ -2164,8 +2181,9 @@ export default function HomePage() {
                 maxLength={2}
                 value={values.nombre}
                 onChange={(event) => {
-                  if (!values.dates) return handleChange(event);
-                  const monthsToAdd = event.target.value;
+                  const value = parseInt(event.target.value);
+                  if (!values.dates || !value) return handleChange(event);
+                  const monthsToAdd = value - 1;
                   const newDate = dayjs(values.dates[0]).add(
                     monthsToAdd,
                     "month"
