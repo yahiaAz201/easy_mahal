@@ -521,7 +521,7 @@ export default function HomePage() {
       client["key"] = client["_id"];
       return client;
     });
-    setClients([]);
+    setClients(newClients);
   }, []);
 
   useEffect(() => {
@@ -1926,19 +1926,6 @@ export default function HomePage() {
     <>
       <div className="page page_home">
         <div className="control">
-          <div
-            style={{
-              justifySelf: "flex-start",
-            }}
-          >
-            <Input.Search
-              placeholder="input search text"
-              style={{
-                width: 200,
-              }}
-            />
-          </div>
-
           <Button
             type="primary"
             shape="round"
