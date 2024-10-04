@@ -4,10 +4,8 @@ import React, { useEffect, useState } from "react";
 import { Button, message } from "antd";
 import { Formik } from "formik";
 import * as Yup from "yup";
-//import { jwtDecode } from "jwt-decode";
 
 import AppInputTextFeild from "../components/AppInputTextFeild";
-import ErrorMessage from "../components/ErrorMessage";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -26,8 +24,6 @@ const validationSchema = Yup.object({
 });
 
 export default function LoginPage({ setAdmin }) {
-  const [error, setError] = useState(null);
-
   useEffect(() => {
     document.title = "Log In ";
   }, []);
@@ -74,7 +70,7 @@ export default function LoginPage({ setAdmin }) {
               value={values.email}
               status="secondary"
               error={errors.email}
-              touched={touched.email}
+              touched={isSubmitting}
             />
 
             <AppInputTextFeild
@@ -87,7 +83,7 @@ export default function LoginPage({ setAdmin }) {
               value={values.password}
               status="secondary"
               error={errors.password}
-              touched={touched.password}
+              touched={isSubmitting}
             />
 
             <Button

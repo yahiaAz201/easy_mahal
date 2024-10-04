@@ -1,5 +1,5 @@
 .page_login {
-  background-color: #fff;
+  background-color: #f1f5f9;
   display: flex;
   justify-content: center;
 }
@@ -8,10 +8,12 @@
   width: 500px;
   height: fit-content;
   padding: 20px 30px;
-  border: 2px solid #f0f0f0;
+  box-shadow: rgba(60, 66, 87, 0.08) 0px 15px 35px 0px,
+    rgba(0, 0, 0, 0.12) 0px 5px 15px 0px;
   border-radius: 6px;
   color: rgba(0, 0, 0, 0.74);
   margin-top: 10px;
+  background: #fff;
 }
 
 .form h2.header {

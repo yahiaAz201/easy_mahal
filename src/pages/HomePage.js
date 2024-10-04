@@ -37,14 +37,15 @@ import AppInputTextFeild from "../components/AppInputTextFeild";
 import { ErrorMessage, Formik } from "formik";
 import Toggle from "../components/Toggle";
 
-const pageHeight =
-  window.document.documentElement.scrollHeight - (99 + 53 + 32);
+/* const pageHeight =
+  window.document.documentElement.scrollHeight - (99 + 53 + 32); */
+const pageHeight = window.document.documentElement.scrollHeight - (99 + 25);
 
 const CLIENTS_STATUS = {
-  0: { name: "Clean", color: "#28A745" },
-  1: { name: "Late ", color: "#C4E538	" },
-  2: { name: "Suspended", color: "#FFC107" },
-  5: { name: "Blocked", color: "#DC3545	" },
+  0: { name: "Clean", colorHex: "#28A745", color: "green" },
+  1: { name: "Late", colorHex: "#C4E538", color: "lime" },
+  2: { name: "Suspended", colorHex: "#FFC107", color: "yellow" },
+  5: { name: "Blocked", colorHex: "#DC3545", color: "red" },
 };
 
 const USER = {
@@ -1646,7 +1647,7 @@ export default function HomePage() {
     {
       title: "Status",
       dataIndex: "status",
-      width: 100,
+      width: 150,
       filters: Object.entries(CLIENTS_STATUS).map(([key, status]) => ({
         value: key,
         text: (
@@ -1655,16 +1656,19 @@ export default function HomePage() {
       })),
       onFilter: (value, record) => record.status == value,
       render: (status) => (
-        <Badge
-          status="processing"
-          color={CLIENTS_STATUS[status].color}
-          text={CLIENTS_STATUS[status].name}
-        />
+        <Tag color={CLIENTS_STATUS[status].color}>
+          <Badge
+            status="processing"
+            color={CLIENTS_STATUS[status].colorHex}
+            text={CLIENTS_STATUS[status].name}
+          />
+        </Tag>
       ),
     },
     {
       title: "Phone N°",
       dataIndex: "phone",
+      render: (phoneNumber) => <Tag color="#3c3c3cd9">{phoneNumber}</Tag>,
     },
     {
       title: "CCP",
@@ -2069,7 +2073,7 @@ export default function HomePage() {
                   maxLength="2"
                 />
               </Flex>
-              <Flex wrap="wrap" align="flex-end">
+              <Flex wrap="wrap" align="flex-start">
                 <AppInputTextFeild
                   style={{ marginRight: 5, flex: 0.4 }}
                   name="idn"
