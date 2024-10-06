@@ -1643,6 +1643,7 @@ export default function HomePage() {
           {client.fname} {client.lname}
         </span>
       ),
+      ellipsis: true,
     },
     {
       title: "Status",

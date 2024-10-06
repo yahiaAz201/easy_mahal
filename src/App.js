@@ -1,21 +1,34 @@
 import "./App.css";
 
 import { useState } from "react";
-import { Layout, Menu, Button, Avatar } from "antd";
 import {
+  Layout,
+  Menu,
+  Avatar,
+  Button,
+  Flex,
+  Tooltip,
+  Badge,
+  Divider,
+} from "antd";
+import {
+  Bell,
+  BellRing,
   ChevronLeft,
   ChevronRight,
-  PointerOffIcon,
+  LogOut,
+  Package,
   Settings,
-  SquareMenu,
   Store,
-  TouchpadOff,
   User,
   Users,
 } from "lucide-react";
 
-import HomePage from "./pages/HomePage";
 import NavBar from "./components/NavBar";
+
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 const { Sider, Content } = Layout;
 
@@ -29,7 +42,7 @@ function App() {
   return (
     <div className="App">
       <Layout>
-        <Sider collapsed={collapsed} style={{ background: "#fff" }}>
+        <Sider collapsed={collapsed} className="sidebar">
           <button className={`sidebar-toggler`} onClick={toggleCollapsed}>
             {collapsed ? (
               <ChevronRight color="rgba(0,0,0,.77)" size={16} />
@@ -45,6 +58,7 @@ function App() {
             />
             <span className="sidebar-header-title">Easy Mahal</span>
           </header>
+
           <Menu
             defaultSelectedKeys={["1"]}
             mode="inline"
@@ -52,32 +66,58 @@ function App() {
             selectedKeys={[current]}
             className="sidebar-menu"
           >
-            <Menu.Item icon={<Users size={16} />} key="1">
-              All Clients
-            </Menu.Item>
-            <Menu.SubMenu
-              key="sub1"
-              icon={<Settings size={16} />}
-              title="Settings"
-            >
-              <Menu.Item key="2">Profile</Menu.Item>
-              <Menu.Item key="3">Option 2</Menu.Item>
-            </Menu.SubMenu>
-            <Menu.Item icon={<Store size={16} />} key="4">
-              My Branches
-            </Menu.Item>
-            <div className="admin-card">
-              <Avatar
-                src="https://api.dicebear.com/9.x/thumbs/svg?seed=yahia"
-                className="admin-card-avatar"
-                icon={<User size={18} />}
-              />
-              <div className="admin-card-details">
-                <div className="admin-card-name">yahia bourouni</div>
-                <div className="admin-card-email">ybourouni@yahoo.com</div>
-              </div>
-            </div>
+            <Menu.ItemGroup title="Main">
+              <Menu.Item icon={<Users size={16} />} key="1">
+                All Clients
+              </Menu.Item>
+
+              <Menu.Item icon={<Store size={16} />} key="2">
+                My Branches
+              </Menu.Item>
+              <Menu.Item icon={<Package size={16} />} key="3">
+                Products
+              </Menu.Item>
+            </Menu.ItemGroup>
+            <Menu.ItemGroup title="System">
+              <Menu.SubMenu
+                key="sub1"
+                icon={<Settings size={16} />}
+                title="Settings"
+              >
+                <Menu.Item key="4">Profile</Menu.Item>
+                <Menu.Item key="5">Option 2</Menu.Item>
+              </Menu.SubMenu>
+              <Menu.Item
+                icon={
+                  <Badge dot>
+                    <BellRing size={16} />
+                  </Badge>
+                }
+                key="6"
+              >
+                Notifications
+              </Menu.Item>
+            </Menu.ItemGroup>
           </Menu>
+          <div className="admin-card">
+            <Avatar
+              src="https://api.dicebear.com/9.x/thumbs/svg?seed=Felix"
+              className="admin-card-avatar"
+              icon={<User size={15} />}
+              style={{ minWidth: 30 }}
+            />
+            <div className="admin-card-details">
+              <div className="admin-card-name">yahia bourouni</div>
+              <div className="admin-card-email">ybourouni@yahoo.com</div>
+            </div>
+            <ChevronRight className="admin-card-icon" size={16} color="white" />
+          </div>
+          <Tooltip title={collapsed ? "Log Out" : ""} placement="right">
+            <Button type="primary" danger className="logout-button">
+              <LogOut size={15} />
+              <span>Log Out</span>
+            </Button>
+          </Tooltip>
         </Sider>
         <Layout>
           <Content>

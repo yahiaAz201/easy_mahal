@@ -1,6 +1,15 @@
+.sidebar {
+  background: #fff !important;
+  height: 100vh;
+}
+
+.sidebar .ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+}
+
 .ant-layout-sider {
   position: relative;
-  padding-top: 50px;
 }
 
 .sidebar-toggler {
@@ -33,6 +42,7 @@
 .ant-layout-sider header.sidebar-header {
   width: 100%;
   padding: 10px;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -78,56 +88,83 @@
 .sidebar-menu {
   scrollbar-width: none;
   -ms-overflow-style: none;
-  height: calc(100vh - 235px);
   overflow-y: scroll;
+  flex: 1;
 }
 .admin-card {
-  width: 95%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  padding: 12px;
-  margin: 0 2.5%;
+  width: 97%;
+  padding: 12px 5px;
+  margin: 0 1.5%;
   background-color: #24272a;
   border-radius: 10px;
-  position: absolute;
   bottom: 10px;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
     rgb(209, 213, 219) 0px 0px 0px 1px inset;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
 .admin-card .admin-card-avatar {
   margin-right: 2px;
+  transition: transform 0.2s ease;
+}
+
+.admin-card:hover .admin-card-avatar {
+  transform: scale(1.05);
 }
 
 .admin-card .admin-card-details {
+  height: 30px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap; /* Prevents text wrapping */
-  color: #fff;
+  color: #ffffff;
   transition: all 0.2s ease;
+  overflow: hidden;
+
+  max-width: 120px;
 }
 
 .admin-card .admin-card-details .admin-card-name {
-  font-size: 14px;
+  font-size: 13px;
   text-transform: capitalize;
 }
 
 .admin-card .admin-card-details .admin-card-email {
-  font-size: 12px;
+  font-size: 10px;
   color: rgba(255, 255, 255, 0.5);
+  text-overflow: ellipsis !important;
+}
+
+.admin-card .admin-card-icon {
+  margin-left: auto;
+  margin-right: 4px;
+  transition: margin 0.2s ease-in-out;
+}
+
+.admin-card:hover .admin-card-icon {
+  margin-right: 0px;
 }
 
 .ant-layout-sider.ant-layout-sider-collapsed .admin-card {
   padding: 10px;
-
   align-items: center;
   justify-content: center;
 }
 
 .ant-layout-sider.ant-layout-sider-collapsed .admin-card .admin-card-details {
+  display: none;
+}
+
+.logout-button {
+  margin: 10px;
+  font-weight: 600;
+}
+
+.ant-layout-sider.ant-layout-sider-collapsed .logout-button span {
   display: none;
 }
