@@ -168,3 +168,7 @@
 .ant-layout-sider.ant-layout-sider-collapsed .logout-button span {
   display: none;
 }
+
+.ant-layout-content {
+  padding: 0 20px;
+}

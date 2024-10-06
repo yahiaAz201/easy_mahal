@@ -16,11 +16,13 @@ import {
   BellRing,
   ChevronLeft,
   ChevronRight,
+  Fingerprint,
   LogOut,
   Package,
   Settings,
   Store,
   User,
+  User2,
   Users,
 } from "lucide-react";
 
@@ -29,6 +31,7 @@ import NavBar from "./components/NavBar";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import AccountPage from "./pages/AccountPage";
 
 const { Sider, Content } = Layout;
 
@@ -74,7 +77,7 @@ function App() {
               <Menu.Item icon={<Store size={16} />} key="2">
                 My Branches
               </Menu.Item>
-              <Menu.Item icon={<Package size={16} />} key="3">
+              <Menu.Item icon={<Package size={16} />} key="3" disabled>
                 Products
               </Menu.Item>
             </Menu.ItemGroup>
@@ -84,8 +87,9 @@ function App() {
                 icon={<Settings size={16} />}
                 title="Settings"
               >
-                <Menu.Item key="4">Profile</Menu.Item>
-                <Menu.Item key="5">Option 2</Menu.Item>
+                <Menu.Item icon={<Fingerprint size={16} />} key="4">
+                  Account
+                </Menu.Item>
               </Menu.SubMenu>
               <Menu.Item
                 icon={

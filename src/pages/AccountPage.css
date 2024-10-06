@@ -1,0 +1,17 @@
+.account-page {
+  padding-top: 20px;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.account-page .headline {
+  font-size: 18px;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.account-page .divider {
+  margin: 7px 0;
+}
