@@ -15,6 +15,7 @@ import {
   DatePicker,
   Tooltip,
   Switch,
+  Statistic,
 } from "antd";
 import dayjs from "dayjs";
 

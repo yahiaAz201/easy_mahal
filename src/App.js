@@ -14,8 +14,10 @@ import {
 import {
   Bell,
   BellRing,
+  ChartNoAxesCombined,
   ChevronLeft,
   ChevronRight,
+  CircleUser,
   Fingerprint,
   LogOut,
   Package,
@@ -66,7 +68,6 @@ function App() {
             defaultSelectedKeys={["1"]}
             mode="inline"
             inlineCollapsed={collapsed}
-            selectedKeys={[current]}
             className="sidebar-menu"
           >
             <Menu.ItemGroup title="Main">
@@ -75,22 +76,31 @@ function App() {
               </Menu.Item>
 
               <Menu.Item icon={<Store size={16} />} key="2">
-                My Branches
+                Branches
+              </Menu.Item>
+              <Menu.Item icon={<ChartNoAxesCombined size={16} />} key="4">
+                Analytics
               </Menu.Item>
               <Menu.Item icon={<Package size={16} />} key="3" disabled>
                 Products
               </Menu.Item>
             </Menu.ItemGroup>
             <Menu.ItemGroup title="System">
-              <Menu.SubMenu
+              {/*   <Menu.SubMenu
                 key="sub1"
                 icon={<Settings size={16} />}
                 title="Settings"
               >
-                <Menu.Item icon={<Fingerprint size={16} />} key="4">
+                <Menu.Item icon={<CircleUser size={16} />} key="5">
                   Account
                 </Menu.Item>
-              </Menu.SubMenu>
+                <Menu.Item icon={<Fingerprint size={16} />} key="security">
+                  Security
+                </Menu.Item>
+              </Menu.SubMenu> */}
+              <Menu.Item icon={<Settings size={16} />} key="8">
+                Settings
+              </Menu.Item>
               <Menu.Item
                 icon={
                   <Badge dot>
@@ -118,14 +128,14 @@ function App() {
           </div>
           <Tooltip title={collapsed ? "Log Out" : ""} placement="right">
             <Button type="primary" danger className="logout-button">
-              <LogOut size={15} />
               <span>Log Out</span>
+              <LogOut size={15} />
             </Button>
           </Tooltip>
         </Sider>
         <Layout>
           <Content>
-            <HomePage />
+            <AccountPage />
           </Content>
         </Layout>
       </Layout>
