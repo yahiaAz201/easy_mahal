@@ -172,3 +172,37 @@
 .ant-layout-content {
   padding: 0 20px;
 }
+
+.notifications-list {
+  /*   height: 400px;
+  overflow-y: auto; */
+}
+
+.notifications-list .notifications-item {
+  height: 100px;
+  border: 1px solid #f6f1f1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  transition: padding 0.2s ease;
+}
+
+.notifications-list .notifications-item.unread {
+  border-left: 3px solid #ff0000;
+}
+.notifications-list .notifications-item.active {
+  background: rgb(230, 244, 255);
+  padding-left: 15px;
+}
+
+.notifications-list .notifications-item:hover {
+  background: #24272a;
+  color: #fff;
+}
+
+.notifications-list .notifications-item .avatar {
+  width: 60px;
+  height: 60px;
+  margin: 0 10px;
+}

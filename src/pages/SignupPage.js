@@ -51,13 +51,6 @@ export default function SignupPage() {
     message.success("success");
   };
 
-  const handleStateChange = (state) => {
-    const cuurentState = states.find((_state) => _state.id == state);
-    if (cuurentState) {
-      setCities(cuurentState.baladiyat);
-    }
-  };
-
   return (
     <main className="page page_signup">
       <Formik
@@ -89,8 +82,11 @@ export default function SignupPage() {
         }) => (
           <div className="form">
             <h2 className="header">Sign Up</h2>
-            <p className="subheader">Enter your credentials below</p>
-            <Flex align="center" justify="space-around" wrap="wrap">
+            <p className="subheader">
+              You have an account already? <a>Login</a>
+            </p>
+
+            <Flex align="flex-start" justify="space-around" wrap="wrap">
               <AppInputTextFeild
                 style={{ marginRight: 5, flex: 1 }}
                 name="fname"
@@ -116,18 +112,6 @@ export default function SignupPage() {
                 touched={touched.lname}
                 error={errors.lname}
               />
-              {/*  <AppInputTextFeild
-                style={{ marginRight: 5, flex: 1 }}
-                name="ccp"
-                label="CCP"
-                placeholder="**********"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.ccp}
-                status="secondary"
-                touched={touched.ccp}
-                error={errors.ccp}
-                /> */}
               <AppInputTextFeild
                 name="phone"
                 label="Phone Number"
@@ -205,7 +189,7 @@ export default function SignupPage() {
                 disabled={!values.state}
               />
             </Flex>
-            <Divider />
+
             <AppInputTextFeild
               name="email"
               label="Email"

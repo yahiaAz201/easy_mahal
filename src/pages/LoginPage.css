@@ -1,7 +1,9 @@
 .page_login {
   background-color: #f1f5f9;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 .page_login .form {
@@ -12,7 +14,6 @@
     rgba(0, 0, 0, 0.12) 0px 5px 15px 0px;
   border-radius: 6px;
   color: rgba(0, 0, 0, 0.74);
-  margin-top: 10px;
   background: #fff;
 }
 
@@ -46,6 +47,8 @@
   }
   .page_login .form {
     width: 100%;
+    flex: 1;
+    padding-top: 50px;
     border: none;
   }
 }

@@ -44,3 +44,13 @@ input[type="number"] {
 *::-webkit-scrollbar-button {
   display: none; /* Remove the arrows */
 }
+
+a {
+  color: #1877f2;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+}
+a:hover {
+  color: #1876f2a6;
+}

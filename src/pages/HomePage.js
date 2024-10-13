@@ -497,6 +497,7 @@ const orderValidationSchema = Yup.object({
 
 export default function HomePage() {
   const [clients, setClients] = useState([]);
+  const [clientsLoading, setClientsLoading] = useState(false);
   const [selectedClients, setSelectedClients] = useState([]);
   const [expandedRows, setExpandedRows] = useState([]);
   const [isSelectEnabled, setIsSelectEnabled] = useState(false);
@@ -514,7 +515,13 @@ export default function HomePage() {
   const [tempClient_id, setTempClient_id] = useState(null);
   const [tempPurchase, setTempPurchase] = useState(null);
 
-  useEffect(() => {
+  const loadClients = async () => {
+    setClientsLoading(true);
+    await new Promise((resolve) =>
+      setTimeout(() => {
+        resolve();
+      }, 3000)
+    );
     const newClients = NEW_CLIENTS.map((client) => {
       client["orders"] = client.orders.map((order) => {
         order["key"] = order["_id"];
@@ -524,6 +531,11 @@ export default function HomePage() {
       return client;
     });
     setClients(newClients);
+    setClientsLoading(false);
+  };
+
+  useEffect(() => {
+    loadClients();
   }, []);
 
   useEffect(() => {
@@ -1962,6 +1974,7 @@ export default function HomePage() {
           dataSource={clients}
           pagination={false}
           size="small"
+          loading={clientsLoading}
           scroll={{
             y: pageHeight,
           }}

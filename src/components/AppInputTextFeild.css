@@ -27,7 +27,7 @@
   color: #ff0000;
 }
 
-.text_input_container div {
+.text_input_container div.input {
   background: #fff;
   border: 2px solid #f0f0f0;
   border-radius: 6px;
@@ -35,6 +35,13 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.text_input_container .show-icon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 5px;
 }
 
 .text_input_container.small div {

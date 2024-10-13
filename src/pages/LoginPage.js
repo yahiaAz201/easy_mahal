@@ -60,7 +60,9 @@ export default function LoginPage({ setAdmin }) {
         }) => (
           <div className="form">
             <h2 className="header">Login</h2>
-            <p className="subheader">Enter your credentials below</p>
+            <p className="subheader">
+              You don't have an account? <a>Sign Up</a>
+            </p>
             <AppInputTextFeild
               name="email"
               label="Email"
@@ -71,6 +73,7 @@ export default function LoginPage({ setAdmin }) {
               status="secondary"
               error={errors.email}
               touched={isSubmitting}
+              size="large"
             />
 
             <AppInputTextFeild
@@ -84,7 +87,12 @@ export default function LoginPage({ setAdmin }) {
               status="secondary"
               error={errors.password}
               touched={isSubmitting}
+              size="large"
             />
+
+            <div>
+              <a href="#dsf">Forget my Password !</a>
+            </div>
 
             <Button
               type="primary"

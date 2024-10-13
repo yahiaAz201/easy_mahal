@@ -1,16 +1,17 @@
 .page_signup {
   background-color: #f1f5f9;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 .page_signup .form {
-  padding: 20px 30px;
+  padding: 10px 20px;
   border-radius: 6px;
   color: rgba(0, 0, 0, 0.74);
   box-shadow: rgba(60, 66, 87, 0.08) 0px 15px 35px 0px,
     rgba(0, 0, 0, 0.12) 0px 5px 15px 0px;
-  margin-top: 10px;
   height: fit-content;
   background: #fff;
 }
@@ -45,6 +46,8 @@
   }
   .page_signup .form {
     width: 100%;
+    flex: 1;
+    padding-top: 50px;
     border: none;
   }
 }
