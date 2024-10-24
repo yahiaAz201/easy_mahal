@@ -1,4 +1,4 @@
-import "./ForgetPassword.css";
+import "./ForgetPasswordPage.css";
 import React, { useEffect, useState } from "react";
 
 import { motion } from "framer-motion";

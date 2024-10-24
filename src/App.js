@@ -19,6 +19,7 @@ import {
   ChevronRight,
   LogOut,
   Package,
+  Route,
   Settings,
   Store,
   User,
@@ -26,13 +27,13 @@ import {
 } from "lucide-react";
 
 import NavBar from "./components/NavBar";
+import Loading from "./components/Loading";
 
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import AccountPage from "./pages/Settings";
-import ForgetPassword from "./pages/ForgetPassword";
-import Loading from "./components/Loading";
+import ForgetPasswordPage from "./pages/ForgetPasswordPage";
 import BranchesPage from "./pages/BranchesPage";
 
 const { Sider, Content } = Layout;
@@ -81,7 +82,7 @@ function App() {
     <>
       <div className="App">
         {!user ? (
-          <LoginPage />
+          <SignupPage />
         ) : (
           <Layout>
             <Sider collapsed={collapsed} className="sidebar">
@@ -130,6 +131,9 @@ function App() {
                   <Menu.Item icon={<Settings size={16} />} key="settings">
                     Settings
                   </Menu.Item>
+                  <Menu.Item icon={<Route size={16} />} key="logs">
+                    Logs
+                  </Menu.Item>
                   <Menu.Item
                     icon={
                       <Badge dot={false}>
@@ -175,7 +179,7 @@ function App() {
             </Sider>
             <Layout>
               <Content>
-                <AccountPage />
+                <BranchesPage />
               </Content>
             </Layout>
           </Layout>

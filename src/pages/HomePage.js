@@ -1990,20 +1990,16 @@ export default function HomePage() {
                   onChange: setSelectedClients,
                 }
           }
-          onRow={(record) => {
-            return {
-              onClick: !isSelectEnabled
-                ? handleOnExpand(record)
-                : () => {
-                    const isExist = selectedClients.includes(record.key);
-                    !isExist
-                      ? setSelectedClients([...selectedClients, record.key])
-                      : setSelectedClients((prevClients) =>
-                          prevClients.filter((client) => client !== record.key)
-                        );
-                  },
-            };
-          }}
+          onRow={(record) => ({
+            onClick: !isSelectEnabled
+              ? handleOnExpand(record)
+              : () =>
+                  setSelectedClients((prevClients) =>
+                    prevClients.includes(record.key)
+                      ? prevClients.filter((client) => client !== record.key)
+                      : [...prevClients, record.key]
+                  ),
+          })}
         />
 
         <iframe ref={iframeRef} style={{ display: "none" }} />

@@ -1,0 +1,32 @@
+[
+  {
+    "_id": "q4s65d4q5sd456qs5d",
+    "firstName": "abdelheq",
+    "lastName": "bourouni",
+    "email": "ybourouni@yahoo.com",
+    "password": "0123@ybourouni",
+    "phoneNumber": "0783773369",
+    "ccp": {
+      "number": "0043081247",
+      "key": "05"
+    },
+    "branches": [
+      {
+        "_id": "b1s65d4q5sd456qs5d",
+        "name": "Branch 1",
+        "workers": [
+          {
+            "_id": "w1s65d4q5sd456qs5d",
+            "name": "Worker 1",
+            "role": {
+              "label": "Manager",
+              "permissions": [1, 2, 3, 4]
+            },
+            "email": "worker1@example.com",
+            "password": "123@worker1"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,5 +1,5 @@
 .branches-page {
-  padding-top: 20px;
+  padding-top: 10px;
   padding-bottom: 10px;
   display: flex;
   flex-direction: column;
@@ -10,4 +10,12 @@
   font-size: 18px;
   font-weight: 500;
   margin-left: 5px;
+}
+
+.branches-page .ant-card .ant-card-body {
+  padding: 5px 10px;
+}
+
+.ant-table-expanded-row .ant-table {
+  margin-inline: 0 !important;
 }
