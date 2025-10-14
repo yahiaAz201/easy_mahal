@@ -82,7 +82,7 @@ function App() {
     <>
       <div className="App">
         {!user ? (
-          <HomePage   />
+          <AccountPage   />
         ) : (
           <Layout>
             <Sider collapsed={collapsed} className="sidebar">
