@@ -81,7 +81,7 @@ function App() {
   return (
     <>
       <div className="App">
-        {user ? (
+        {false ? (
           <HomePage  />
         ) : (
           <Layout>
